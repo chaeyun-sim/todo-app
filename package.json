@@ -1,0 +1,13 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "todo-app",
+  "scripts": {
+    "start:client": "cd client && npm run dev",
+    "start:server": "cd server && npm run start",
+    "start": "concurrently \"npm run start:client\" \"npm run start:server\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
