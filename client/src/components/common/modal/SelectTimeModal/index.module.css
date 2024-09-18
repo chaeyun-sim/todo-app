@@ -1,0 +1,33 @@
+.select {
+  width: 50px;
+  height: 30px;
+  font-size: 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0 5px;
+  border-radius: 6px;
+  border: 1px solid #73737380;
+  outline: none;
+  text-align: center;
+}
+
+.select::-ms-expand {
+  display: none;
+}
+
+.time_separator {
+  margin: 0 10px;
+}
+
+.reset_btn {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  border: none;
+  background-color: white;
+  gap: 3px;
+  cursor: pointer;
+  color: #73737390;
+  font-weight: 500;
+}

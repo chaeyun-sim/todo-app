@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Todo from './pages/todo';
 import Login from './pages/login';
 import Singup from './pages/signup';
-import MyPage from './pages/mypage';
+import My from './pages/my';
 
 export default function Router() {
   return (
@@ -21,7 +21,7 @@ export default function Router() {
       />
       <Route
         path='/mypage'
-        element={<MyPage />}
+        element={<My />}
       />
     </Routes>
   );

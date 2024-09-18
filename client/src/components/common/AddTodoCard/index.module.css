@@ -34,7 +34,7 @@
 }
 
 .todo_title {
-  width: 250px;
+  width: 280px;
   font-size: 12px;
   color: #737373;
   -webkit-line-clamp: 2;
@@ -43,6 +43,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: flex;
+  height: 14.5px;
 
   .todo_container:hover & {
     -webkit-line-clamp: 3;
@@ -53,21 +54,15 @@
 .todo_time {
   font-size: 10px;
   color: #a3a3a3;
-  margin-top: 6px;
-}
-
-.category {
-  width: 9px;
-  height: 30px;
-  border-radius: 8px;
-  position: absolute;
-  right: 10px;
+  margin-top: 3px;
+  cursor: pointer;
 }
 
 .blank_input {
   border: none;
   outline: none;
   width: 150px;
+  height: 14.5px;
 }
 
 .blank_input::placeholder {
@@ -78,5 +73,12 @@
   border: none;
   background-color: transparent;
   color: #cacaca;
-  cursor: pointer;
+}
+
+.category {
+  width: 9px;
+  height: 30px;
+  border-radius: 8px;
+  position: absolute;
+  right: 10px;
 }

@@ -32,47 +32,26 @@ export default function TodoCard({ title, startTime, endTime, category }: TodoCa
       className={style.todo_container}
       style={{ cursor: !title ? 'default' : 'pointer' }}
     >
-      <div className={style.check_box}></div>
+      <button className={style.check_box}></button>
       <div className={style.info_box}>
         <span
           className={style.todo_title}
           style={{ width: !title && !category ? '250px' : '200px' }}
         >
-          {title || (
-            <input
-              className={style.blank_input}
-              placeholder='Title...'
-              style={{ fontSize: '13px' }}
-              onKeyDown={keyDownHandler}
-            />
-          )}
-          {!category && (
-            <button
-              className={style.blank_btn}
-              style={{ fontSize: '11px' }}
-            >
-              카테고리 선택하기
-            </button>
-          )}
+          {title}
         </span>
         <div className={style.todo_time}>
-          {!startTime && !endTime && (
-            <button
-              className={style.blank_btn}
-              style={{ fontSize: '11px' }}
-            >
-              시간 설정하기
-            </button>
-          )}
           {endTime
             ? `${convertTime(startTime)} - ${convertTime(endTime)}`
             : `${convertTime(startTime)}`}
         </div>
       </div>
-      <div
-        className={style.category}
-        style={{ backgroundColor: categoryColor }}
-      />
+      {category && (
+        <div
+          className={style.category}
+          style={{ backgroundColor: categoryColor }}
+        />
+      )}
     </div>
   );
 }

@@ -13,12 +13,11 @@
 
 .modalContent {
   background-color: white;
-  padding: 20px;
+  padding: 16px;
   border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
   position: relative;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
 }
 
 .closeButton {
@@ -27,6 +26,16 @@
   right: 10px;
   background: none;
   border: none;
-  cursor: pointer;
   padding: 0;
+}
+
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close_btn {
+  border: none;
+  background-color: transparent;
 }

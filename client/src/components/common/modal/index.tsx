@@ -1,20 +1,25 @@
 import { PropsWithChildren, useEffect } from 'react';
-import styles from './index.module.css';
+import style from './index.module.css';
 import { MdClose } from 'react-icons/md';
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  width?: string;
+  height?: string;
+  modalTitle: string;
 }
 
-export default function Modal({ isOpen, onClose, children }: PropsWithChildren<ModalProps>) {
+export default function Modal({
+  isOpen,
+  onClose,
+  children,
+  width,
+  height,
+  modalTitle,
+}: PropsWithChildren<ModalProps>) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-
+    document.body.style.overflow = isOpen ? 'hidden' : 'auto';
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -23,14 +28,24 @@ export default function Modal({ isOpen, onClose, children }: PropsWithChildren<M
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <button
-          className={styles.closeButton}
-          onClick={onClose}
-        >
-          <MdClose size={24} />
-        </button>
+    <div
+      className={style.modalOverlay}
+      onClick={onClose}
+    >
+      <div
+        className={style.modalContent}
+        style={{ width: width || '290px', height: height || '350px' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className={style.modal_header}>
+          <strong style={{ fontSize: '20px' }}>{modalTitle}</strong>
+          <button
+            onClick={onClose}
+            className={style.close_btn}
+          >
+            <MdClose size={24} />
+          </button>
+        </div>
         {children}
       </div>
     </div>
