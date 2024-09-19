@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import getConnection from '../config/connection';
 import { TodoService } from '../services/todoService';
-import { UserService } from '../services/userService';
+import { AuthService } from '../services/authService';
 
 const connectionPromise = getConnection();
 
@@ -9,7 +9,7 @@ export const Middleware = async (req: Request, _res: Response, next: NextFunctio
   try {
     const conn = await connectionPromise;
     req.todoService = new TodoService(conn);
-    req.userService = new UserService(conn);
+    req.authService = new AuthService(conn);
     req.middlewareProcessed = true;
     next();
   } catch (error) {
@@ -21,7 +21,7 @@ declare global {
   namespace Express {
     interface Request {
       todoService: TodoService;
-      userService: UserService;
+      authService: AuthService;
       middlewareProcessed: boolean;
     }
   }

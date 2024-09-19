@@ -1,6 +1,6 @@
 import { UserItem } from '../types/types';
 
-export class UserService {
+export class AuthService {
   constructor(private conn: any) {}
 
   async join(body: { name: string; email: string; password: string }) {

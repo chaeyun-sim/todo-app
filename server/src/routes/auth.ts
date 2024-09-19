@@ -9,7 +9,7 @@ router.use(errorHandler);
 router.post(
   '/join',
   asyncHandler(async (req: express.Request, res: express.Response) => {
-    const result = await req.userService.join(req.body);
+    const result = await req.authService.join(req.body);
 
     if (!result) {
       return res.status(404).json({ success: false, message: '이미 존재하는 유저입니다.' });
@@ -22,7 +22,7 @@ router.post(
 router.post(
   '/login',
   asyncHandler(async (req: express.Request, res: express.Response) => {
-    const result = await req.userService.login(req.body);
+    const result = await req.authService.login(req.body);
 
     if (!result.success) {
       return res.status(401).json({ success: false, message: result.message });
