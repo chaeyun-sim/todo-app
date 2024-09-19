@@ -8,9 +8,12 @@
     "start": "concurrently \"npm run start:client\" \"npm run start:server\""
   },
   "devDependencies": {
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
     "concurrently": "^9.0.1"
   },
   "dependencies": {
+    "@types/node": "^22.5.5",
     "@types/recharts": "^1.8.29",
     "recharts": "^2.12.7"
   }
