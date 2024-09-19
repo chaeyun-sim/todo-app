@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import logo from '../../assets/logo-big.svg';
 import Input from '../../components/common/Input';
 import style from './index.module.css';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo-big.svg';
 
-export default function Login() {
+export default function Join() {
   const [inputs, setInputs] = useState<{ [key: string]: string }>({
-    Email: '',
-    Password: '',
+    name: '',
+    email: '',
+    password: '',
   });
   const [errorMessage, setErrorMessage] = useState<{ [key: string]: string }>({
+    name: '',
     email: '',
     password: '',
   });
@@ -18,7 +20,10 @@ export default function Login() {
     let isValid = true;
     let errorMsg = '';
 
-    if (field === 'email') {
+    if (field === 'name') {
+      isValid = /^[a-zA-Zㄱ-ㅎ가-힣]*$/.test(value);
+      errorMsg = isValid ? '' : '영문, 한글 외의 문자는 입력할 수 없습니다.';
+    } else if (field === 'email') {
       const filteredValue = value.replace(/[^a-zA-Z0-9._%+-@]/g, '');
       isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(filteredValue);
       errorMsg = isValid ? '' : '올바른 이메일 형식이 아닙니다.';
@@ -29,7 +34,9 @@ export default function Login() {
     setErrorMessage({ ...errorMessage, [field]: errorMsg });
   };
 
-  const submitHandler = () => {};
+  const submitHandler = () => {
+    // 저장하기
+  };
 
   return (
     <div className={style.container}>
@@ -39,11 +46,12 @@ export default function Login() {
       />
       <form onSubmit={submitHandler}>
         <div style={{ marginTop: '60px' }}>
-          {['Email', 'Password'].map(item => (
+          {['Name', 'Email', 'Password'].map(item => (
             <div key={item}>
               <Input
-                value={inputs[item.toLowerCase()]}
+                type={item === 'Name' ? 'text' : item.toLowerCase()}
                 placeholder={item}
+                value={inputs[item.toLowerCase()]}
                 onSetValue={value => changeHandler(item.toLowerCase(), value)}
                 required
               />
@@ -64,15 +72,15 @@ export default function Login() {
             type='submit'
             className={style.submit_btn}
           >
-            로그인
+            회원가입
           </button>
           <p className={style.more_text}>
             또는{' '}
             <Link
               className={style.do_else}
-              to={'/join'}
+              to={'/login'}
             >
-              회원가입하기
+              로그인하기
             </Link>
           </p>
         </div>

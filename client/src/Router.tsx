@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Todo from './pages/todo';
 import Login from './pages/login';
-import Singup from './pages/signup';
+import Join from './pages/join';
 import My from './pages/my';
 
 export default function Router() {
@@ -16,8 +16,8 @@ export default function Router() {
         element={<Login />}
       />
       <Route
-        path='/sign-up'
-        element={<Singup />}
+        path='/join'
+        element={<Join />}
       />
       <Route
         path='/my'

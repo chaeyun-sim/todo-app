@@ -48,7 +48,7 @@ export default function Form({ onSubmit, placeholders, type }: FormProps) {
           />
         </div>
       ))}
-      <div>
+      <div className={style.submit_box}>
         <button
           type='submit'
           className={style.submit_btn}
