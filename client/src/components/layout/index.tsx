@@ -4,6 +4,7 @@ import { FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
 import { MdNavigateBefore } from 'react-icons/md';
 import { PiSunLight, PiMoonLight } from 'react-icons/pi';
+import { IoNotificationsOutline } from 'react-icons/io5';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
@@ -46,12 +47,24 @@ export default function Layout({ children }: PropsWithChildren) {
                 )}
               </div>
             ) : (
-              <Link
-                to={'/my'}
-                className={style.link}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
               >
-                <FiMenu size={22} />
-              </Link>
+                <Link to='/'>
+                  <IoNotificationsOutline size={24} />
+                </Link>
+                <Link
+                  to={'/my'}
+                  className={style.link}
+                >
+                  <FiMenu size={22} />
+                </Link>
+              </div>
             )}
           </header>
         )}
