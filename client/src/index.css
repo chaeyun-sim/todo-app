@@ -32,3 +32,11 @@ img {
   -o-user-drag: none;
   pointer-events: none;
 }
+
+a {
+  color: black;
+}
+
+a:active {
+  color: black;
+}

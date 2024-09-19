@@ -1,0 +1,55 @@
+.float_box {
+  width: 100%;
+  height: 31px;
+  border-radius: 8px;
+  background-color: #b1e0fc58;
+  box-shadow: 0px 2px 6.7px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  color: #222;
+  font-family: Pretendard;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 11px;
+  cursor: pointer;
+}
+
+.float_box:nth-child(3) {
+  margin-bottom: 0;
+}
+
+.btn {
+  width: 125px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #ebebeb;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit_box {
+  position: absolute;
+  bottom: 16px;
+  height: 70px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.submit_btn {
+  width: 80px;
+  height: 40px;
+  font-size: 15px;
+  border-radius: 8px;
+  color: white;
+  background-color: #3984fa;
+  font-weight: 500;
+  margin-top: 13px;
+  margin-right: 16px;
+}
