@@ -4,4 +4,5 @@ export interface TodoItem {
   startTime: string;
   endTime: string;
   category: string;
+  memo?: string;
 }
