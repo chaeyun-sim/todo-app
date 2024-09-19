@@ -1,19 +1,20 @@
-const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0' });
-const PORT = 3000;
+import swaggerJsdoc from 'swagger-jsdoc';
 
 const options = {
-  info: {
-    title: 'TODO APP API',
-    description: '투두앱을 위한 API SWAGGER.',
-  },
-  servers: [
-    {
-      url: `http://localhost:${PORT}`,
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'TODO APP API',
+      version: '1.0.0',
+      description: '투두앱을 위한 API SWAGGER.',
     },
-  ],
-  schemes: ['http'],
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+    ],
+  },
+  apis: ['./src/swagger/*.swagger.ts', './src/routes/*.ts'],
 };
 
-const outputFile = './swagger/swagger-output.json';
-const endpointsFiles = ['./index.ts'];
-swaggerAutogen(outputFile, endpointsFiles, options);
+export const specs = swaggerJsdoc(options);

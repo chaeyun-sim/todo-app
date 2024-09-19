@@ -27,7 +27,7 @@ router.post(
 
     await req.todoService.addTodo(req.body);
 
-    res.status(201).json({ success: true });
+    res.status(201).json({ success: true, message: `${req.body.title} 투두를 등록했습니다.` });
   })
 );
 
@@ -42,7 +42,7 @@ router.put(
 
     await req.todoService.updateTodo(req.body, Number(req.params.id));
 
-    res.json({ success: true });
+    res.json({ success: true, message: `${req.params.id}번 투두를 수정했습니다.` });
   })
 );
 
@@ -54,7 +54,7 @@ router.delete(
 
     if (!result.success) return res.status(404).json({ message: result.message });
 
-    res.json({ success: true });
+    res.json({ success: true, message: `${req.params.id}번 투두를 삭제했습니다.` });
   })
 );
 

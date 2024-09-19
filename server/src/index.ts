@@ -1,9 +1,9 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import swaggerFile from './swagger/swagger-output.json';
 import todoRoute from './routes/todos';
 import 'reflect-metadata';
 import getConnection from './config/connection';
+import { specs } from './swagger/swagger';
 
 const app = express();
 const port = 3000;
@@ -11,7 +11,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api/todo', todoRoute);
 
