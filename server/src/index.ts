@@ -1,29 +1,26 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './swagger/swagger-output.json';
-import routes from './routes/index';
-import pool from './config/db';
+import todoRoute from './routes/todos';
+import 'reflect-metadata';
+import getConnection from './config/connection';
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.use('/api', routes);
+app.use('/api/todo', todoRoute);
 
 async function testConnection() {
-  let conn;
   try {
-    conn = await pool.getConnection();
-    const rows = await conn.query('SHOW TABLES');
-    console.log(rows);
+    await getConnection();
     console.log('MariaDB 연결 성공!');
   } catch (err) {
     console.error('MariaDB 연결 실패:', err);
-  } finally {
-    if (conn) conn.end();
   }
 }
 
