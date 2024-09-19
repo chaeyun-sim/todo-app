@@ -31,8 +31,8 @@ export default function SelectTimeModal({
       setTimes({ ...times, startMinute: '00' });
     }
 
-    if (times.endHour && !times.endMinute) {
-      setTimes({ ...times, endMinute: '00' });
+    if (times.startHour && times.startMinute && (!times.endHour || !times.endMinute)) {
+      setTimes({ ...times, endHour: times.startHour, endMinute: times.startMinute });
     }
 
     if (times.endHour && times.endMinute) {
