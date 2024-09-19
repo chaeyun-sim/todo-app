@@ -20,7 +20,7 @@ export default function Router() {
         element={<Singup />}
       />
       <Route
-        path='/mypage'
+        path='/my'
         element={<My />}
       />
     </Routes>
