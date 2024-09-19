@@ -12,47 +12,49 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <main className={style.main}>
       <div className={style.contents}>
-        <header
-          className={style.header}
-          style={{ justifyContent: pathname === '/my' ? 'flex-start' : 'flex-end' }}
-        >
-          {pathname === '/my' ? (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <Link to={'/'}>
-                <MdNavigateBefore size={26} />
+        {!['/join', '/login'].includes(pathname) && (
+          <header
+            className={style.header}
+            style={{ justifyContent: pathname === '/my' ? 'flex-start' : 'flex-end' }}
+          >
+            {pathname === '/my' ? (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <Link to={'/'}>
+                  <MdNavigateBefore size={26} />
+                </Link>
+                {changeToDark ? (
+                  <button onClick={() => setChangeToDark(false)}>
+                    <PiMoonLight
+                      size={20}
+                      style={{ marginBottom: '5px' }}
+                    />
+                  </button>
+                ) : (
+                  <button onClick={() => setChangeToDark(true)}>
+                    <PiSunLight
+                      size={20}
+                      style={{ marginBottom: '5px' }}
+                    />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <Link
+                to={'/my'}
+                className={style.link}
+              >
+                <FiMenu size={22} />
               </Link>
-              {changeToDark ? (
-                <button onClick={() => setChangeToDark(false)}>
-                  <PiMoonLight
-                    size={20}
-                    style={{ marginBottom: '5px' }}
-                  />
-                </button>
-              ) : (
-                <button onClick={() => setChangeToDark(true)}>
-                  <PiSunLight
-                    size={20}
-                    style={{ marginBottom: '5px' }}
-                  />
-                </button>
-              )}
-            </div>
-          ) : (
-            <Link
-              to={'/my'}
-              className={style.link}
-            >
-              <FiMenu size={22} />
-            </Link>
-          )}
-        </header>
+            )}
+          </header>
+        )}
         <div className={style.children}>{children}</div>
       </div>
     </main>
