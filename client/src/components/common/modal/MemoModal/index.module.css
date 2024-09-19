@@ -1,0 +1,22 @@
+.submit_box {
+  position: absolute;
+  bottom: 16px;
+  height: 70px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.submit_btn {
+  width: 80px;
+  height: 40px;
+  font-size: 15px;
+  border-radius: 8px;
+  color: white;
+  background-color: #3984fa;
+  font-weight: 500;
+  margin-top: 13px;
+  margin-right: 16px;
+}

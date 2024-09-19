@@ -1,0 +1,81 @@
+@keyframes wiggle {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+.wiggle {
+  animation: wiggle 0.2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.chip {
+  padding: 6px 10px;
+  background-color: white;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.added_chip {
+  display: flex;
+  align-items: center;
+}
+
+.delete_text {
+  margin-top: 4px;
+  margin-left: 6px;
+}
+
+.adding_new_chips {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.input {
+  margin-top: 10px;
+  width: 268px;
+  font-size: 14px;
+  height: 37px;
+}
+
+.input_length {
+  position: absolute;
+  right: 13px;
+  bottom: 0;
+  transform: translateY(-50%);
+  font-size: 13px;
+  margin-bottom: 2.5px;
+  color: #7c7c7c;
+}
+
+.submit_box {
+  position: absolute;
+  bottom: 16px;
+  height: 70px;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid #c8c8c8;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.submit_btn {
+  width: 80px;
+  height: 40px;
+  font-size: 15px;
+  border-radius: 8px;
+  color: white;
+  background-color: #3984fa;
+  font-weight: 500;
+  margin-top: 13px;
+  margin-right: 16px;
+}

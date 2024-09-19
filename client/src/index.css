@@ -1,5 +1,26 @@
+/* Agbalumo */
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
+
+/* Aboreto */
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Agbalumo&display=swap');
+
+/* pretendard */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
 html,
 body {
   margin: 0;
   padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #f7f8fa;
+  font-family: Pretendard;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
 }
