@@ -1,8 +1,9 @@
 .todo_container {
-  max-height: 50px;
+  max-height: 56px;
   padding: 10px;
   border-radius: 8px;
   display: flex;
+  align-items: flex-start;
   position: relative;
   cursor: pointer;
   transition: max-height 0.8s ease;
@@ -16,11 +17,11 @@
 
 .todo_container,
 .todo_container:not(:hover) {
-  transition: max-height 0.8s ease;
+  transition: max-height 1.5s ease;
 }
 
 .todo_container:hover {
-  max-height: 100px;
+  max-height: 500px;
 }
 
 .check_box {
@@ -82,4 +83,25 @@
   background-color: transparent;
   color: #cacaca;
   cursor: pointer;
+}
+
+.todo_memo {
+  font-size: 10px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.8s ease, max-height 0.6s ease, margin-top 0.3s ease 0.3s;
+  margin-top: 0;
+}
+
+.todo_memo:hover {
+  cursor: text;
+  user-select: text;
+}
+
+.todo_container:hover .todo_memo {
+  opacity: 1;
+  max-height: 500px;
+  margin-top: 10px;
+  transition: opacity 0.8s ease, max-height 0.6s ease, margin-top 0.3s ease;
 }

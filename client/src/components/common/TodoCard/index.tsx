@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import style from './index.module.css';
 import { FaCheck } from 'react-icons/fa6';
+import { TodoItem } from '../../../types/types';
+import { FiFileText } from 'react-icons/fi';
 
-interface TodoCardProps {
-  title: string;
-  startTime: string;
-  endTime?: string;
-  category: string;
+interface TodoCardProps extends TodoItem {
   isCompleted?: boolean;
 }
 
@@ -15,6 +13,7 @@ export default function TodoCard({
   startTime,
   endTime,
   category,
+  memo,
   isCompleted,
 }: TodoCardProps) {
   const [check, setCheck] = useState(false);
@@ -71,7 +70,7 @@ export default function TodoCard({
             width: !title && !category ? '250px' : '200px',
             textDecorationLine: check ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
-            color: check ? '#E8E8E8' : '#a3a3a3',
+            color: check ? '#E8E8E8' : '#404040',
           }}
         >
           {title}
@@ -81,14 +80,41 @@ export default function TodoCard({
           style={{
             textDecorationLine: check ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
-            color: check ? '#E8E8E8' : '#a3a3a3',
+            color: check ? '#E8E8E8' : '#404040',
           }}
         >
           {endTime
             ? `${convertTime(startTime)} - ${convertTime(endTime)}`
             : `${convertTime(startTime)}`}
         </div>
+        {memo && (
+          <div
+            className={style.todo_memo}
+            style={{
+              color: check ? '#E8E8E8' : '#404040',
+            }}
+          >
+            <pre
+              style={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                fontFamily: 'inherit',
+                margin: 0,
+              }}
+            >
+              {memo}
+            </pre>
+          </div>
+        )}
       </div>
+      {memo && (
+        <div
+          className={style.category}
+          style={{ right: '40px' }}
+        >
+          <FiFileText color={'#505050'} />
+        </div>
+      )}
       {category && (
         <div
           className={style.category}
