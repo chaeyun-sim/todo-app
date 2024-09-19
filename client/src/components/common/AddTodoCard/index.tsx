@@ -40,7 +40,7 @@ export default function AddTodoCard({
     let ampm = 'AM';
     let hour = Number(time.split(':')[0]);
     if (hour >= 12 && hour < 24) {
-      hour -= 12;
+      if (hour > 12) hour -= 12;
       ampm = 'PM';
     }
     return `${hour}:${time.split(':')[1]} ${ampm}`;
@@ -51,6 +51,14 @@ export default function AddTodoCard({
     if (inputs.memo!.length > 20) return inputs.memo!.slice(0, 20) + '...';
 
     return inputs.memo;
+  };
+
+  const getTime = () => {
+    if (startTime === endTime || !endTime) {
+      return convertTime(startTime);
+    } else {
+      return `${convertTime(startTime)} - ${convertTime(endTime)}`;
+    }
   };
 
   return (
@@ -70,6 +78,7 @@ export default function AddTodoCard({
                 value={text}
                 onChange={e => setText(e.target.value)}
                 onKeyDown={keyDownHandler}
+                onBlur={() => onSetInputs({ ...inputs, title: text })}
               />
             ) : (
               <span
@@ -99,9 +108,7 @@ export default function AddTodoCard({
                 className={style.todo_time}
                 onClick={openTimeModal}
               >
-                {endTime.split(':')[0] === '00'
-                  ? `${convertTime(startTime)}`
-                  : `${convertTime(startTime)} - ${convertTime(endTime)}`}
+                {getTime()}
               </div>
             ) : (
               <button
