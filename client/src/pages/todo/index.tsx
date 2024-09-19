@@ -115,10 +115,7 @@ export default function Todo() {
         {todos.map(todo => (
           <TodoCard
             key={todo.id}
-            title={todo.title}
-            startTime={todo.startTime}
-            endTime={todo.endTime}
-            category={todo.category}
+            {...todo}
           />
         ))}
       </div>
