@@ -5,10 +5,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { MdNavigateBefore } from 'react-icons/md';
 import { PiSunLight, PiMoonLight } from 'react-icons/pi';
 import { IoNotificationsOutline } from 'react-icons/io5';
+import NotificationModal from '../common/modal/NotificationModal';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
   const [changeToDark, setChangeToDark] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <main className={style.main}>
@@ -55,9 +57,9 @@ export default function Layout({ children }: PropsWithChildren) {
                   width: '100%',
                 }}
               >
-                <Link to='/'>
+                <button onClick={() => setIsOpen(true)}>
                   <IoNotificationsOutline size={24} />
-                </Link>
+                </button>
                 <Link
                   to={'/my'}
                   className={style.link}
@@ -70,6 +72,12 @@ export default function Layout({ children }: PropsWithChildren) {
         )}
         <div className={style.children}>{children}</div>
       </div>
+      {isOpen && (
+        <NotificationModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
     </main>
   );
 }

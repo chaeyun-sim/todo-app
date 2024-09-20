@@ -57,11 +57,11 @@ router.get(
 // DELETE "/api/category/:id"
 // 개별 카테고리 삭제
 router.delete(
-  '/:id',
+  '/:name',
   asyncHandler(async (req: express.Request, res: express.Response) => {
-    const { id } = req.params;
+    const { name } = req.params;
 
-    const result = await req.categoryService.deleteCategory(id);
+    const result = await req.categoryService.deleteCategory(name);
 
     if (!result) {
       return res.status(404).json({

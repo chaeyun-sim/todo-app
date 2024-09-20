@@ -33,12 +33,12 @@ export class CategoryService {
     return data;
   }
 
-  async deleteCategory(id: string) {
+  async deleteCategory(name: string) {
     const data = await this.conn.query('SELECT * FROM Categories');
 
-    if (!data.filter((el: CategoryItem) => el.id === Number(id)).length) return false;
+    if (!data.filter((el: CategoryItem) => el.name === name).length) return false;
 
-    await this.conn.query('DELETE FROM Categories WHERE id = ?', [Number(id)]);
+    await this.conn.query('DELETE FROM Categories WHERE name = ?', [name]);
 
     return true;
   }

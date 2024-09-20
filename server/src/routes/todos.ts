@@ -78,4 +78,15 @@ router.delete(
   })
 );
 
+router.get(
+  '/count/:user_id',
+  asyncHandler(async (req: express.Request, res: express.Response) => {
+    const result = await req.todoService.getCompletedTodos(Number(req.params.user_id));
+    res.json({
+      success: true,
+      count: result.length,
+    });
+  })
+);
+
 export default router;

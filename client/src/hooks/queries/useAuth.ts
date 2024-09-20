@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ const useLogin = () => {
     },
     onSuccess: data => {
       localStorage.setItem('@isLoggedIn', 'true');
-      localStorage.setItem('@user_id', data.userId);
+      localStorage.setItem('@user_id', data.user.id);
       navigate('/');
     },
     onError: (error: Error) => {
@@ -52,4 +52,46 @@ const useLogin = () => {
   });
 };
 
-export { useJoin, useLogin };
+const useGetUser = (id: number) => {
+  return useQuery({
+    queryKey: ['user', id],
+    queryFn: async () => {
+      const result = await axios.get(`/api/auth/user/${id}`);
+      return result.data;
+    },
+  });
+};
+
+const useLogout = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async ({ id }: { id: number }) => {
+      const result = await axios.post('/api/auth/logout', { id });
+      return result.data;
+    },
+    onSuccess: () => {
+      localStorage.setItem('@isLoggedIn', 'false');
+      localStorage.removeItem('@user_id');
+      navigate('/');
+    },
+  });
+};
+
+const useWithdrawal = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async ({ id }: { id: number }) => {
+      const result = await axios.delete(`/api/auth/withdrawal/${id}`);
+      return result.data;
+    },
+    onSuccess: () => {
+      localStorage.setItem('@isLoggedIn', 'false');
+      localStorage.removeItem('@user_id');
+      navigate('/');
+    },
+  });
+};
+
+export { useJoin, useLogin, useGetUser, useLogout, useWithdrawal };

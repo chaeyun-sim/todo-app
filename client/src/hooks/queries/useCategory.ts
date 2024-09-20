@@ -38,4 +38,18 @@ const useAddCategory = () => {
   });
 };
 
-export { useSingleCategory, useCategories, useAddCategory };
+const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ name }: { name: string }) => {
+      const result = await axios.delete(`/api/category/${name}`);
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+};
+
+export { useSingleCategory, useCategories, useAddCategory, useDeleteCategory };

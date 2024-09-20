@@ -4,7 +4,11 @@ import Input from '../../Input';
 import { MdOutlineDelete, MdClose } from 'react-icons/md';
 import { FaCheck } from 'react-icons/fa6';
 import style from './index.module.css';
-import { useAddCategory, useCategories } from '../../../../hooks/queries/useCategory';
+import {
+  useAddCategory,
+  useCategories,
+  useDeleteCategory,
+} from '../../../../hooks/queries/useCategory';
 import { CategoryItem } from '../../../../types/types';
 import { HexColorPicker } from 'react-colorful';
 
@@ -20,13 +24,13 @@ export default function SelectCategoryModal({
   const [selected, setSelected] = useState('');
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [newCategory, setNewCategory] = useState('');
-  const [addedCategories, setAddedCategories] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [color, setColor] = useState('#ff8787');
   const [openColorPicker, setOpenColorPicker] = useState(false);
 
   const { data, isLoading } = useCategories();
   const { mutate: addCategory } = useAddCategory();
+  const { mutate: deleteCategory } = useDeleteCategory();
 
   useEffect(() => {
     if (data && data.success) {
@@ -38,17 +42,9 @@ export default function SelectCategoryModal({
     if (isDeleting) setSelected('');
   }, [isDeleting]);
 
-  useEffect(() => {
-    if (!addedCategories.length) setIsDeleting(false);
-  }, [addedCategories]);
-
   const keyDownHandler: KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Enter' && e.nativeEvent.isComposing === false) {
-      if (
-        newCategory.trim() !== '' &&
-        !addedCategories.includes(newCategory) &&
-        addedCategories.length < 6
-      ) {
+      if (newCategory.trim() !== '' && newCategory) {
         addCategory({
           name: newCategory,
           color,
@@ -60,8 +56,7 @@ export default function SelectCategoryModal({
   };
 
   const deletetCategory = (category: string) => {
-    const newArray = addedCategories.filter(el => el !== category);
-    setAddedCategories(newArray);
+    deleteCategory({ name: category });
   };
 
   const submitHandler = () => {

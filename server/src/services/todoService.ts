@@ -76,4 +76,12 @@ export class TodoService {
 
     return true;
   }
+
+  async getCompletedTodos(userId: number) {
+    const result = await this.conn.query(
+      'SELECT * FROM Todo WHERE user_id = ? AND is_completed = true',
+      [userId]
+    );
+    return result;
+  }
 }

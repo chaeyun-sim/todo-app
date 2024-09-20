@@ -74,8 +74,8 @@
 }
 
 .category {
-  width: 9px;
-  height: 30px;
+  width: 13px;
+  height: 13px;
   border-radius: 8px;
   position: absolute;
   right: 10px;
@@ -99,6 +99,7 @@
 }
 
 .todo_memo {
+  width: 255px;
   font-size: 10px;
   opacity: 0;
   max-height: 0;
