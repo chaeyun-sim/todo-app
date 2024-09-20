@@ -10,6 +10,7 @@ import SelectTimeModal from '../../components/common/modal/SelectTimeModal';
 import MemoModal from '../../components/common/modal/MemoModal';
 import { useAddTodo, useGetTodos } from '../../hooks/queries/useTodo';
 import TITLES from '../../constants/title';
+import DeleteModal from '../../components/common/modal/DeleteModal';
 
 export default function Todo() {
   const [current, setCurrent] = useState(0);
@@ -19,6 +20,7 @@ export default function Todo() {
     isCategoryModalOpen: false,
     isTimeModalOpen: false,
     isMemoModalOpen: false,
+    isDeleteModalOpen: false,
   });
   const [inputs, setInputs] = useState<Omit<TodoItem, 'id' | 'is_completed'>>({
     title: '',
@@ -29,6 +31,7 @@ export default function Todo() {
   });
   const { data: todoList, refetch } = useGetTodos({ target: TITLES[current].toLowerCase() });
   const { mutate: addTodo } = useAddTodo();
+  const [idForDelete, setIdForDelete] = useState(0);
 
   useEffect(() => {
     if (todoList && todoList.data) {
@@ -84,6 +87,8 @@ export default function Todo() {
             key={todo.title + idx}
             data={todo}
             onRefetch={() => refetch()}
+            openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}
+            onSetId={(id: number) => setIdForDelete(id)}
           />
         ))}
       </div>
@@ -171,6 +176,13 @@ export default function Todo() {
           onClose={() => setOpenModal({ ...openModal, isMemoModalOpen: false })}
           onSetText={text => setInputs({ ...inputs, memo: text })}
           data={inputs.memo as string}
+        />
+      )}
+      {openModal.isDeleteModalOpen && (
+        <DeleteModal
+          isOpen={openModal.isDeleteModalOpen}
+          onClose={() => setOpenModal({ ...openModal, isDeleteModalOpen: false })}
+          id={idForDelete}
         />
       )}
     </div>

@@ -6,13 +6,16 @@ import { FiFileText } from 'react-icons/fi';
 import { useSingleCategory } from '../../../hooks/queries/useCategory';
 import { useTodoChecked } from '../../../hooks/queries/useTodo';
 import { isBefore, isYesterday, startOfToday } from 'date-fns';
+import { MdOutlineDelete } from 'react-icons/md';
 
 interface TodoCardProps {
   data: TodoItem;
   onRefetch: () => void;
+  openDeleteModal: () => void;
+  onSetId: (id: number) => void;
 }
 
-export default function TodoCard({ data, onRefetch }: TodoCardProps) {
+export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: TodoCardProps) {
   const { id, is_completed, title, start_date, end_date, memo, category_id, created_at } = data;
 
   const { data: category } = useSingleCategory(Number(category_id));
@@ -121,6 +124,20 @@ export default function TodoCard({ data, onRefetch }: TodoCardProps) {
             </pre>
           </div>
         )}
+        <div className={`${style.todo_memo} ${style.edit}`}>
+          <button
+            style={{ width: '25px' }}
+            onClick={() => {
+              onSetId(id);
+              openDeleteModal();
+            }}
+          >
+            <MdOutlineDelete
+              size={18}
+              stroke='1'
+            />
+          </button>
+        </div>
       </div>
       {memo && (
         <div

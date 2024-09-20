@@ -3,6 +3,7 @@ import logo from '../../assets/logo-big.svg';
 import Input from '../../components/common/Input';
 import style from './index.module.css';
 import { Link } from 'react-router-dom';
+import { useLogin } from '../../hooks/queries/useAuth';
 
 export default function Login() {
   const [inputs, setInputs] = useState<{ [key: string]: string }>({
@@ -13,6 +14,8 @@ export default function Login() {
     email: '',
     password: '',
   });
+
+  const { mutate, error } = useLogin();
 
   const changeHandler = (field: string, value: string) => {
     let isValid = true;
@@ -29,7 +32,15 @@ export default function Login() {
     setErrorMessage({ ...errorMessage, [field]: errorMsg });
   };
 
-  const submitHandler = () => {};
+  const submitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputs.email && inputs.password) {
+      mutate({
+        email: inputs.email,
+        password: inputs.password,
+      });
+    }
+  };
 
   return (
     <div className={style.container}>
@@ -42,6 +53,7 @@ export default function Login() {
           {['Email', 'Password'].map(item => (
             <div key={item}>
               <Input
+                type={item.toLowerCase()}
                 value={inputs[item.toLowerCase()]}
                 placeholder={item}
                 onSetValue={value => changeHandler(item.toLowerCase(), value)}
@@ -59,6 +71,11 @@ export default function Login() {
             </div>
           ))}
         </div>
+        {error && (
+          <p style={{ color: 'crimson', marginBottom: '10px' }}>
+            {error instanceof Error ? error.message : '로그인에 실패했습니다.'}
+          </p>
+        )}
         <div className={style.submit_box}>
           <button
             type='submit'

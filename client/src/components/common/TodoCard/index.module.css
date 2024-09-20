@@ -5,7 +5,6 @@
   display: flex;
   align-items: flex-start;
   position: relative;
-  cursor: pointer;
   transition: max-height 0.8s ease;
   overflow: hidden;
 }
@@ -31,7 +30,7 @@
   display: flex;
   align-items: flex-start;
   position: relative;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: max-height 0.8s ease;
   overflow: hidden;
   border: 1px solid #ebebeb;
@@ -49,6 +48,7 @@
   display: flex;
   flex-direction: column;
   margin-top: 2px;
+  cursor: default;
 }
 
 .todo_title {
@@ -117,4 +117,12 @@
   max-height: 500px;
   margin-top: 10px;
   transition: opacity 0.8s ease, max-height 0.6s ease, margin-top 0.3s ease;
+}
+
+.edit {
+  width: 289px;
+  display: flex;
+  justify-content: flex-end;
+  height: 20px;
+  cursor: default !important;
 }

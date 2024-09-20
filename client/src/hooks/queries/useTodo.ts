@@ -27,6 +27,7 @@ const useTodoChecked = () => {
 
 const useAddTodo = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       category_id,
@@ -56,10 +57,18 @@ const useAddTodo = () => {
   });
 };
 
-// title,
-//     start_date,
-//     end_date,
-//     memo,
-//     category_id,
+const useDeleteTodo = () => {
+  const queryClient = useQueryClient();
 
-export { useGetTodos, useTodoChecked, useAddTodo };
+  return useMutation({
+    mutationFn: async ({ id }: { id: number }) => {
+      const result = await axios.delete(`/api/todo/${id}`);
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-todos'] });
+    },
+  });
+};
+
+export { useGetTodos, useTodoChecked, useAddTodo, useDeleteTodo };
