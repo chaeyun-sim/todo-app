@@ -19,7 +19,7 @@ router.get(
 );
 
 // POST "/" - 개별 데이터 등록
-// req.body - title, date, memo
+// req.body - title, date, memo, category_id
 router.post(
   '/',
   asyncHandler(async (req: express.Request, res: express.Response) => {

@@ -16,11 +16,22 @@ export class TodoService {
     });
   }
 
-  async addTodo({ title, date, memo }: { title: string; date: string; memo: string }) {
-    await this.conn.query('INSERT INTO Todo (title, date, memo) VALUES (?, ?, ?)', [
+  async addTodo({
+    title,
+    date,
+    memo,
+    category_id,
+  }: {
+    title: string;
+    date: string;
+    memo: string;
+    category_id: number;
+  }) {
+    await this.conn.query('INSERT INTO Todo (title, date, memo, category_id) VALUES (?, ?, ?, ?)', [
       title,
       date,
       memo,
+      category_id,
     ]);
   }
 
