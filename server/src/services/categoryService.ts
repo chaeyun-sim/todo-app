@@ -37,4 +37,20 @@ export class CategoryService {
 
     return true;
   }
+
+  async getCategoryTodoCounts() {
+    const query = `
+    SELECT c.id, c.name, c.color, COUNT(t.id) as todoCount
+    FROM Categories c
+    LEFT JOIN Todo t ON c.id = t.category_id
+    GROUP BY c.id, c.name, c.color
+  `;
+
+    const result = await this.conn.query(query);
+    return result.map((row: any) => ({
+      id: Number(row.id),
+      name: row.name,
+      todoCount: Number(row.todoCount),
+    }));
+  }
 }

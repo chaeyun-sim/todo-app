@@ -34,10 +34,6 @@ router.get(
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const data = await req.categoryService.getCategories();
 
-    if (!data.length) {
-      return res.status(404).json({ success: false, message: '데이터가 존재하지 않습니다.' });
-    }
-
     return res.status(200).json({
       success: true,
       data: data,
@@ -62,6 +58,20 @@ router.delete(
     }
 
     return res.status(200).json({ success: true, message: '카테고리 삭제 성공!' });
+  })
+);
+
+// GET "/api/category/percentage"
+// 카테고리 별 투두
+router.get(
+  '/percentage',
+  asyncHandler(async (req: express.Request, res: express.Response) => {
+    const result = await req.categoryService.getCategoryTodoCounts();
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
   })
 );
 
