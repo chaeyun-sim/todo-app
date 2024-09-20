@@ -1,9 +1,9 @@
 import express from 'express';
 import { asyncHandler } from '../middlewares/errorHandler';
-import { todoServiceMiddleware } from '../middlewares/todoServiceMiddleware';
+import { Middleware } from '../middlewares/middleware';
 
 const router = express.Router();
-router.use(todoServiceMiddleware);
+router.use(Middleware);
 
 // GET "/" - 특정 날의 투두 데이터
 // target = 'yesterday' | 'today' | 'tomorrow'

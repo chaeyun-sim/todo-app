@@ -9,3 +9,12 @@ export type TodoItem = {
   updated_at: string;
   is_completed: string;
 };
+
+export type UserItem = {
+  id: number;
+  email: string;
+  password: string;
+  name: string;
+  created_at: string;
+  completed_todos: string;
+};
