@@ -7,6 +7,7 @@ import reminderRoute from './routes/reminders';
 import 'reflect-metadata';
 import getConnection from './config/connection';
 import { specs } from './swagger/swagger';
+import { SSEService } from './services/sseService';
 
 const app = express();
 const port = 3000;
@@ -32,10 +33,24 @@ async function testConnection() {
 
 testConnection();
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port: ${port}`);
-});
+async function startServer() {
+  try {
+    const conn = await getConnection();
+    console.log('MariaDB 연결 성공!');
+
+    const sseService = new SSEService(conn);
+
+    app.listen(port, () => {
+      console.log(`Server listening on port: ${port}`);
+      sseService.setupSSE();
+    });
+  } catch (err) {
+    console.error('MariaDB 연결 실패:', err);
+  }
+}
+
+startServer();

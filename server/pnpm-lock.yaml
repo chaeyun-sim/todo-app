@@ -14,6 +14,9 @@ dependencies:
   reflect-metadata:
     specifier: ^0.2.2
     version: 0.2.2
+  sse:
+    specifier: ^0.0.8
+    version: 0.0.8
   swagger-autogen:
     specifier: ^2.23.7
     version: 2.23.7
@@ -25,6 +28,9 @@ devDependencies:
   '@types/express':
     specifier: ^4.17.21
     version: 4.17.21
+  '@types/sse':
+    specifier: ^0.0.0
+    version: 0.0.0
   '@types/swagger-jsdoc':
     specifier: ^6.0.4
     version: 6.0.4
@@ -188,6 +194,12 @@ packages:
       '@types/http-errors': 2.0.4
       '@types/node': 22.5.5
       '@types/send': 0.17.4
+    dev: true
+
+  /@types/sse@0.0.0:
+    resolution: {integrity: sha512-5gFwbzDsaCze6/SYNwOmk/F24+gtXwTX3at12rJMDo7+VLi3jI83j5h5IkdXEvGakTkVIF9VQBxWOensz+LBWQ==}
+    dependencies:
+      '@types/node': 22.5.5
     dev: true
 
   /@types/swagger-jsdoc@6.0.4:
@@ -666,6 +678,11 @@ packages:
     resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
     dev: false
 
+  /options@0.0.6:
+    resolution: {integrity: sha512-bOj3L1ypm++N+n7CEbbe473A414AB7z+amKYshRb//iuL3MpdDCLhPnw6aVTdKB9g5ZRVHIEp8eUln6L2NUStg==}
+    engines: {node: '>=0.4.0'}
+    dev: false
+
   /parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
@@ -767,6 +784,13 @@ packages:
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
       object-inspect: 1.13.2
+
+  /sse@0.0.8:
+    resolution: {integrity: sha512-cviG7JH31TUhZeaEVhac3zTzA+2FwA7qvHziAHpb7mC7RNVJ/RbHN+6LIGsS2ugP4o2H15DWmrSMK+91CboIcg==}
+    engines: {node: '>=0.4.0'}
+    dependencies:
+      options: 0.0.6
+    dev: false
 
   /statuses@2.0.1:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
