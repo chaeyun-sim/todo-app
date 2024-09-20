@@ -71,11 +71,11 @@ const useDeleteTodo = () => {
   });
 };
 
-const useCountTodos = (userId: number) => {
+const useCountTodos = () => {
   return useQuery({
-    queryKey: ['count-todos', userId],
+    queryKey: ['count-todos'],
     queryFn: async () => {
-      const result = await axios.get(`/api/todo/count/${userId}`);
+      const result = await axios.get(`/api/todo/count`);
       return result.data;
     },
   });

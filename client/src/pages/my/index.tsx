@@ -31,7 +31,8 @@ export default function My() {
   const userId = Number(localStorage.getItem('@user_id'));
 
   const { data } = useGetUser(userId);
-  const { data: todos } = useCountTodos(userId);
+  const { data: todos } = useCountTodos();
+  console.log(todos);
   const { mutate: logout } = useLogout();
   const { mutate: withdrawal } = useWithdrawal();
 
@@ -70,11 +71,9 @@ export default function My() {
           </button>
         )}
       </div>
-      {isLoggedIn && (
-        <div>
-          <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
-        </div>
-      )}
+      <div>
+        <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
+      </div>
       {isLoggedIn && (
         <>
           <div style={{ marginTop: '40px' }}>
@@ -93,7 +92,7 @@ export default function My() {
         }}
       >
         <strong style={{ fontSize: '18px', fontWeight: '500' }}>알림 설정</strong>
-        <Toggle />
+        <Toggle disabled={!isLoggedIn} />
       </div>
       {!isLoggedIn && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
@@ -110,20 +109,25 @@ export default function My() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <strong style={{ fontSize: '18px', fontWeight: '500' }}>데이터 저장</strong>
         </div>
-        <Toggle />
+        <Toggle
+          checked={isLoggedIn}
+          disabled={!isLoggedIn}
+        />
       </div>
       {!isLoggedIn && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
       {/* 비밀번호 변경 */}
-      <div style={{ marginTop: '27px', cursor: 'pointer' }}>
-        <strong
-          style={{ fontSize: '18px', fontWeight: '500' }}
-          onClick={() => setIsOpen(true)}
-        >
-          비밀번호 변경
-        </strong>
-      </div>
+      {isLoggedIn && (
+        <div style={{ marginTop: '27px', cursor: 'pointer' }}>
+          <strong
+            style={{ fontSize: '18px', fontWeight: '500' }}
+            onClick={() => setIsOpen(true)}
+          >
+            비밀번호 변경
+          </strong>
+        </div>
+      )}
       <div></div>
       {isLoggedIn && (
         <div

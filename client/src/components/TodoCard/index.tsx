@@ -5,7 +5,7 @@ import { TodoItem } from '../../types/types';
 import { FiFileText } from 'react-icons/fi';
 import { useSingleCategory } from '../../hooks/queries/useCategory';
 import { useTodoChecked } from '../../hooks/queries/useTodo';
-import { isBefore, isYesterday, startOfToday } from 'date-fns';
+import { isYesterday } from 'date-fns';
 import { MdOutlineDelete } from 'react-icons/md';
 
 interface TodoCardProps {
@@ -16,15 +16,15 @@ interface TodoCardProps {
 }
 
 export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: TodoCardProps) {
-  const { id, is_completed, title, start_date, end_date, memo, category_id, created_at } = data;
+  const { id, is_completed, title, start_date, end_date, memo, category_id } = data;
 
   const { data: category } = useSingleCategory(Number(category_id));
   const { mutate } = useTodoChecked();
 
   const isExpired = () => {
-    if (!created_at) return false;
-    const createdDate = new Date(created_at);
-    return isYesterday(createdDate) || isBefore(createdDate, startOfToday());
+    if (!start_date) return false;
+    const createdDate = new Date(start_date);
+    return isYesterday(createdDate);
   };
 
   const expired = isExpired();
@@ -86,7 +86,7 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
           className={style.todo_title}
           style={{
             width: !title && !category_id ? '250px' : '200px',
-            textDecorationLine: is_completed || expired ? 'line-through' : 'none',
+            textDecorationLine: is_completed ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
             color: is_completed || expired ? '#cacaca' : '#404040',
           }}
@@ -96,7 +96,7 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
         <div
           className={style.todo_time}
           style={{
-            textDecorationLine: is_completed || expired ? 'line-through' : 'none',
+            textDecorationLine: is_completed ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
             color: is_completed || expired ? '#cacaca' : '#404040',
           }}
@@ -105,7 +105,7 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
             ? convertTime(start_date)
             : `${convertTime(start_date)} - ${convertTime(end_date)}`}
         </div>
-        {memo && (
+        {!is_completed && memo && (
           <div
             className={style.todo_memo}
             style={{
@@ -124,30 +124,32 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
             </pre>
           </div>
         )}
-        <div className={`${style.todo_memo} ${style.edit}`}>
-          <button
-            style={{ width: '25px' }}
-            onClick={() => {
-              onSetId(id);
-              openDeleteModal();
-            }}
-          >
-            <MdOutlineDelete
-              size={18}
-              stroke='1'
-            />
-          </button>
-        </div>
+        {!is_completed && (
+          <div className={`${style.todo_memo} ${style.edit}`}>
+            <button
+              style={{ width: '25px' }}
+              onClick={() => {
+                onSetId(id);
+                openDeleteModal();
+              }}
+            >
+              <MdOutlineDelete
+                size={18}
+                stroke='1'
+              />
+            </button>
+          </div>
+        )}
       </div>
       {memo && (
         <div
           className={style.category}
           style={{ right: '40px' }}
         >
-          <FiFileText color={is_completed || expired ? 'transparent' : '#505050'} />
+          <FiFileText color={is_completed || expired ? '#cacaca' : '#505050'} />
         </div>
       )}
-      {category_id! > 0 && !is_completed && (
+      {category_id! > 0 && (
         <div
           className={style.category}
           style={{ backgroundColor: category?.data[0].color }}

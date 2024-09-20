@@ -59,6 +59,7 @@ const useGetUser = (id: number) => {
       const result = await axios.get(`/api/auth/user/${id}`);
       return result.data;
     },
+    enabled: !!id,
   });
 };
 

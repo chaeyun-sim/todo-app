@@ -49,7 +49,28 @@ export default function SelectTimeModal({
         setErrorMessage('');
       }
     }
-  }, [times]);
+
+    if (TITLES[current].toLowerCase() === 'today') {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      if (times.startHour !== '' && times.startMinute !== '') {
+        if (
+          Number(times.startHour) < currentHour ||
+          (Number(times.startHour) === currentHour && Number(times.startMinute) <= currentMinute)
+        ) {
+          setErrorMessage('현재 시간 이후로만 선택할 수 있습니다.');
+        } else {
+          setErrorMessage('');
+        }
+      } else {
+        setErrorMessage('');
+      }
+    } else {
+      setErrorMessage('');
+    }
+  }, [times, current]);
 
   useEffect(() => {
     if (data?.startTime && typeof data.startTime === 'string') {

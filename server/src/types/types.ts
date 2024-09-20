@@ -31,5 +31,5 @@ export type ReminderItem = {
   todo_id: number;
   reminder_time: string;
   message: string;
-  created_at: string;
+  is_notified: boolean;
 };

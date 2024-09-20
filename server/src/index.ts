@@ -7,7 +7,6 @@ import reminderRoute from './routes/reminders';
 import 'reflect-metadata';
 import getConnection from './config/connection';
 import { specs } from './swagger/swagger';
-import { SSEService } from './services/sseService';
 import cors from 'cors';
 
 const app = express();
@@ -37,11 +36,8 @@ async function startServer() {
     const conn = await getConnection();
     console.log('MariaDB 연결 성공!');
 
-    const sseService = new SSEService(conn);
-
     app.listen(port, () => {
       console.log(`Server listening on port: ${port}`);
-      sseService.setupSSE();
     });
   } catch (err) {
     console.error('MariaDB 연결 실패:', err);
