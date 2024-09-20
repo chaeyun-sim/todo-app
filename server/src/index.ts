@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import todoRoute from './routes/todos';
 import authRoute from './routes/auth';
+import categoryRoute from './routes/categories';
 import 'reflect-metadata';
 import getConnection from './config/connection';
 import { specs } from './swagger/swagger';
@@ -16,6 +17,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api/todo', todoRoute);
 app.use('/api/auth', authRoute);
+app.use('/api/category', categoryRoute);
 
 async function testConnection() {
   try {

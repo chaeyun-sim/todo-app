@@ -32,7 +32,7 @@ export class TodoService {
     await this.conn.query(`UPDATE Todo SET ${makeSQL} WHERE id = ?`, [Object.values(body), id]);
   }
 
-  async deleteTodo(id: string): Promise<{ success: boolean; message?: string }> {
+  async deleteTodo(id: string) {
     const [rows] = await this.conn.query('SELECT * FROM Todo WHERE id = ?', [id]);
 
     if (rows.length === 0) {

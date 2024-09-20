@@ -18,3 +18,9 @@ export type UserItem = {
   created_at: string;
   completed_todos: string;
 };
+
+export type CategoryItem = {
+  id: number;
+  name: string;
+  color: string;
+};
