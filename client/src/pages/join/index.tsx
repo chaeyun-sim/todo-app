@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import Input from '../../components/common/Input';
 import style from './index.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo-big.svg';
+import { useJoin } from '../../hooks/queries/useAuth';
 
 export default function Join() {
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState<{ [key: string]: string }>({
     name: '',
     email: '',
@@ -15,6 +17,8 @@ export default function Join() {
     email: '',
     password: '',
   });
+
+  const { mutate } = useJoin();
 
   const changeHandler = (field: string, value: string) => {
     let isValid = true;
@@ -34,8 +38,19 @@ export default function Join() {
     setErrorMessage({ ...errorMessage, [field]: errorMsg });
   };
 
-  const submitHandler = () => {
-    // 저장하기
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputs.name && inputs.email && inputs.password.length > 8) {
+      mutate({
+        name: inputs.name,
+        email: inputs.email,
+        password: inputs.password,
+      });
+      // TODO: Toast Success 만들기
+      setTimeout(() => {
+        navigate('/login');
+      }, 1000);
+    }
   };
 
   return (

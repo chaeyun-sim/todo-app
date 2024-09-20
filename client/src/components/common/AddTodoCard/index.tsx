@@ -1,10 +1,13 @@
-import { KeyboardEventHandler, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prefer-const */
+import { KeyboardEventHandler, useEffect, useState } from 'react';
 import { TodoItem } from '../../../types/types';
 import style from './index.module.css';
+import { useSingleCategory } from '../../../hooks/queries/useCategory';
 
 interface AddTodoCardProps {
-  inputs: Omit<TodoItem, 'id'>;
-  onSetInputs: (item: Omit<TodoItem, 'id'>) => void;
+  inputs: Omit<TodoItem, 'id' | 'is_completed'>;
+  onSetInputs: (item: Omit<TodoItem, 'id' | 'is_completed'>) => void;
   openCategoryModal: () => void;
   openTimeModal: () => void;
   openMemoModal: () => void;
@@ -20,30 +23,19 @@ export default function AddTodoCard({
   const [text, setText] = useState('');
   const [modifyText, setModifyText] = useState(true);
 
-  const { title, startTime, endTime, category } = inputs;
+  const { category_id, title, start_date, end_date } = inputs;
 
-  let categoryColor = '';
-  if (category === '일상') {
-    categoryColor = '#ff8787';
-  }
+  const { data: category, refetch } = useSingleCategory(Number(category_id));
+
+  useEffect(() => {
+    refetch();
+  }, [category_id, inputs]);
 
   const keyDownHandler: KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Enter' && e.nativeEvent.isComposing === false) {
       onSetInputs({ ...inputs, title: text });
       setModifyText(false);
     }
-  };
-
-  const convertTime = (time: string) => {
-    if (time === '') return '';
-
-    let ampm = 'AM';
-    let hour = Number(time.split(':')[0]);
-    if (hour >= 12 && hour < 24) {
-      if (hour > 12) hour -= 12;
-      ampm = 'PM';
-    }
-    return `${hour}:${time.split(':')[1]} ${ampm}`;
   };
 
   const cutText = () => {
@@ -53,12 +45,28 @@ export default function AddTodoCard({
     return inputs.memo;
   };
 
+  const convertTime = (timeString: string | undefined) => {
+    if (!timeString) return '';
+    const [datePart, timePart] = timeString.split(' ');
+    if (!datePart || !timePart) return '';
+
+    const [hours, minutes] = timePart.split(':');
+    const hoursNum = parseInt(hours, 10);
+    const ampm = hoursNum >= 12 ? 'PM' : 'AM';
+    const hours12 = hoursNum % 12 || 12;
+
+    return `${hours12}:${minutes} ${ampm}`;
+  };
+
   const getTime = () => {
-    if (startTime === endTime || !endTime) {
-      return convertTime(startTime);
-    } else {
-      return `${convertTime(startTime)} - ${convertTime(endTime)}`;
-    }
+    const startTime = convertTime(start_date);
+    const endTime = convertTime(end_date);
+
+    if (!startTime && !endTime) return '';
+    if (startTime === endTime) return startTime;
+    if (startTime && endTime) return `${startTime} ~ ${endTime}`;
+    if (startTime) return startTime;
+    return endTime;
   };
 
   return (
@@ -83,13 +91,13 @@ export default function AddTodoCard({
             ) : (
               <span
                 className={style.todo_title}
-                style={{ width: !title && !category ? '250px' : '200px' }}
+                style={{ width: !title && !category_id ? '250px' : '200px' }}
                 onClick={() => setModifyText(true)}
               >
                 {text}
               </span>
             )}
-            {!inputs.category && (
+            {!inputs.category_id && (
               <button
                 className={style.blank_btn}
                 style={{ fontSize: '11px' }}
@@ -101,9 +109,9 @@ export default function AddTodoCard({
           </span>
           <div
             className={style.todo_time}
-            style={{ marginLeft: !startTime ? '-3px' : 0 }}
+            style={{ marginLeft: !start_date ? '-3px' : 0 }}
           >
-            {inputs.startTime ? (
+            {inputs.start_date ? (
               <div
                 className={style.todo_time}
                 onClick={openTimeModal}
@@ -135,10 +143,13 @@ export default function AddTodoCard({
               + 메모
             </div>
           )}
-          {inputs.category && (
-            <div
+          {inputs.category_id! > 0 && (
+            <button
               className={style.category}
-              style={{ backgroundColor: categoryColor }}
+              style={{
+                backgroundColor: category?.data[0].color || 'white',
+              }}
+              onClick={openCategoryModal}
             />
           )}
         </div>

@@ -33,7 +33,7 @@ router.post(
     res.json({
       success: true,
       message: '로그인에 성공했습니다.',
-      user: userWithoutPassword,
+      userId: userWithoutPassword.id,
     });
   })
 );

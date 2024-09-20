@@ -8,12 +8,18 @@ import 'reflect-metadata';
 import getConnection from './config/connection';
 import { specs } from './swagger/swagger';
 import { SSEService } from './services/sseService';
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  })
+);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
@@ -21,17 +27,6 @@ app.use('/api/todo', todoRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/category', categoryRoute);
 app.use('/api/reminder', reminderRoute);
-
-async function testConnection() {
-  try {
-    await getConnection();
-    console.log('MariaDB 연결 성공!');
-  } catch (err) {
-    console.error('MariaDB 연결 실패:', err);
-  }
-}
-
-testConnection();
 
 app.get('/', (_req, res) => {
   res.send('Hello World!');

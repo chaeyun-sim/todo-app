@@ -1,76 +1,94 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable prefer-const */
 import style from './index.module.css';
 import { FaCheck } from 'react-icons/fa6';
 import { TodoItem } from '../../../types/types';
 import { FiFileText } from 'react-icons/fi';
+import { useSingleCategory } from '../../../hooks/queries/useCategory';
+import { useTodoChecked } from '../../../hooks/queries/useTodo';
+import { isBefore, isYesterday, startOfToday } from 'date-fns';
+import { MdOutlineDelete } from 'react-icons/md';
 
-interface TodoCardProps extends TodoItem {
-  isCompleted?: boolean;
+interface TodoCardProps {
+  data: TodoItem;
+  onRefetch: () => void;
+  openDeleteModal: () => void;
+  onSetId: (id: number) => void;
 }
 
-export default function TodoCard({
-  title,
-  startTime,
-  endTime,
-  category,
-  memo,
-  isCompleted,
-}: TodoCardProps) {
-  const [check, setCheck] = useState(false);
+export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: TodoCardProps) {
+  const { id, is_completed, title, start_date, end_date, memo, category_id, created_at } = data;
 
-  useEffect(() => {
-    if (isCompleted) setCheck(true);
-  }, [isCompleted]);
+  const { data: category } = useSingleCategory(Number(category_id));
+  const { mutate } = useTodoChecked();
 
-  let categoryColor = '';
-  if (category === '일상') {
-    categoryColor = '#ff8787';
-  }
+  const isExpired = () => {
+    if (!created_at) return false;
+    const createdDate = new Date(created_at);
+    return isYesterday(createdDate) || isBefore(createdDate, startOfToday());
+  };
 
-  function convertTime(time: string) {
-    if (time === '') return '';
+  const expired = isExpired();
 
+  const convertTime = (date: string) => {
     let ampm = 'AM';
-    let hour = Number(time.split(':')[0]);
+
+    const str = new Date(date);
+    let hour = str.getHours();
+    const minute = str.getMinutes();
+
     if (hour >= 12 && hour < 24) {
-      hour -= 12;
+      if (hour > 12) hour -= 12;
       ampm = 'PM';
     }
-    return `${hour}:${time.split(':')[1]} ${ampm}`;
-  }
+
+    return `${hour}:${String(minute).padStart(2, '0')} ${ampm}`;
+  };
+
+  const checkHandler = () => {
+    if (!expired) {
+      mutate({ id: id });
+      onRefetch();
+    }
+  };
 
   return (
     <div
       className={
-        check ? `${style.todo_container}` : `${style.todo_container} ${style.todo_container_active}`
+        expired
+          ? `${style.todo_container_expired}`
+          : is_completed
+          ? `${style.todo_container}`
+          : `${style.todo_container} ${style.todo_container_active}`
       }
-      style={{ cursor: !title ? 'default' : 'pointer' }}
+      style={{ cursor: !title || expired ? 'default' : 'pointer' }}
     >
-      {check ? (
+      {is_completed ? (
         <button
           className={style.check_box}
-          onClick={() => setCheck(false)}
+          onClick={checkHandler}
+          style={{ cursor: expired ? 'default' : 'pointer' }}
         >
           <FaCheck
             style={{ marginLeft: '-5.5px', marginTop: '-1px' }}
             size={12}
-            color={'#E8E8E8'}
+            color={'#cacaca'}
           />
         </button>
       ) : (
         <button
           className={style.check_box}
-          onClick={() => setCheck(true)}
+          onClick={checkHandler}
+          style={{ cursor: expired ? 'default' : 'pointer' }}
         />
       )}
       <div className={style.info_box}>
         <span
           className={style.todo_title}
           style={{
-            width: !title && !category ? '250px' : '200px',
-            textDecorationLine: check ? 'line-through' : 'none',
+            width: !title && !category_id ? '250px' : '200px',
+            textDecorationLine: is_completed || expired ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
-            color: check ? '#E8E8E8' : '#404040',
+            color: is_completed || expired ? '#cacaca' : '#404040',
           }}
         >
           {title}
@@ -78,20 +96,20 @@ export default function TodoCard({
         <div
           className={style.todo_time}
           style={{
-            textDecorationLine: check ? 'line-through' : 'none',
+            textDecorationLine: is_completed || expired ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
-            color: check ? '#E8E8E8' : '#404040',
+            color: is_completed || expired ? '#cacaca' : '#404040',
           }}
         >
-          {endTime
-            ? `${convertTime(startTime)} - ${convertTime(endTime)}`
-            : `${convertTime(startTime)}`}
+          {convertTime(start_date) === convertTime(end_date)
+            ? convertTime(start_date)
+            : `${convertTime(start_date)} - ${convertTime(end_date)}`}
         </div>
         {memo && (
           <div
             className={style.todo_memo}
             style={{
-              color: check ? '#E8E8E8' : '#404040',
+              color: is_completed || expired ? '#E8E8E8' : '#404040',
             }}
           >
             <pre
@@ -106,19 +124,33 @@ export default function TodoCard({
             </pre>
           </div>
         )}
+        <div className={`${style.todo_memo} ${style.edit}`}>
+          <button
+            style={{ width: '25px' }}
+            onClick={() => {
+              onSetId(id);
+              openDeleteModal();
+            }}
+          >
+            <MdOutlineDelete
+              size={18}
+              stroke='1'
+            />
+          </button>
+        </div>
       </div>
       {memo && (
         <div
           className={style.category}
           style={{ right: '40px' }}
         >
-          <FiFileText color={'#505050'} />
+          <FiFileText color={is_completed || expired ? 'transparent' : '#505050'} />
         </div>
       )}
-      {category && (
+      {category_id! > 0 && !is_completed && (
         <div
           className={style.category}
-          style={{ backgroundColor: categoryColor }}
+          style={{ backgroundColor: category?.data[0].color }}
         />
       )}
     </div>

@@ -6,6 +6,7 @@ const pool = mariadb.createPool({
   password: 'root',
   database: 'TODO_APP',
   connectionLimit: 5,
+  timezone: '+09:00',
 });
 
 export default pool;
