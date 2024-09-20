@@ -1,25 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 
-export default function Toggle() {
-  const [isOn, setIsOn] = useState<boolean>(false);
-  // TODO: 보안 문제 있음 다시 생각해볼것
-  // 다른 userId를 넣으면 다른 사람 아이디로 로그인된다?!
-  // userId를 넘겨주면 문제가 된다.⭐️
-  // 암호화, 중요한 정보 안 넣기 등등 (아이디도 중요한 정보임)
-  const isLoggedIn = localStorage.getItem('@isLoggedIn') === 'true';
+interface ToggleProps {
+  checked?: boolean;
+  disabled?: boolean;
+  onChange?: (isOn: boolean) => void;
+}
 
-  const toggleHandler = () => (isLoggedIn ? setIsOn(!isOn) : null);
+export default function Toggle({ checked = false, disabled = false, onChange }: ToggleProps) {
+  const [isOn, setIsOn] = useState<boolean>(checked);
+
+  useEffect(() => {
+    setIsOn(checked);
+  }, [checked]);
+
+  const toggleHandler = () => {
+    if (!disabled) {
+      const newState = !isOn;
+      setIsOn(newState);
+      onChange?.(newState);
+    }
+  };
 
   return (
-    <>
-      <div
-        className={styles.toggleContainer}
-        onClick={toggleHandler}
-      >
-        <div className={`${styles.toggleSwitch} ${isOn ? styles.toggleSwitchChecked : ''}`} />
-        <div className={`${styles.toggleCircle} ${isOn ? styles.toggleCircleChecked : ''}`} />
-      </div>
-    </>
+    <div
+      className={`${styles.toggleContainer} ${disabled ? styles.disabled : ''}`}
+      onClick={toggleHandler}
+    >
+      <div className={`${styles.toggleSwitch} ${isOn ? styles.toggleSwitchChecked : ''}`} />
+      <div className={`${styles.toggleCircle} ${isOn ? styles.toggleCircleChecked : ''}`} />
+    </div>
   );
 }
