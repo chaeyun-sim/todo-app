@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable prefer-const */
 import { KeyboardEventHandler, useEffect, useState } from 'react';
-import { TodoItem } from '../../../types/types';
+import { TodoItem } from '../../types/types';
 import style from './index.module.css';
-import { useSingleCategory } from '../../../hooks/queries/useCategory';
+import { useSingleCategory } from '../../hooks/queries/useCategory';
 
 interface AddTodoCardProps {
   inputs: Omit<TodoItem, 'id' | 'is_completed'>;

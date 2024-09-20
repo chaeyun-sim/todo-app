@@ -6,6 +6,10 @@ import { useState } from 'react';
 import Modal from '../../components/common/modal';
 import Input from '../../components/common/Input';
 import Chart from '../../components/Chart';
+import { LuLogIn } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
+import { useGetUser, useLogout, useWithdrawal } from '../../hooks/queries/useAuth';
+import { useCountTodos } from '../../hooks/queries/useTodo';
 
 const PASSWORD_TEXT: {
   [key: string]: string;
@@ -16,16 +20,27 @@ const PASSWORD_TEXT: {
 };
 
 export default function My() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [passwords, setPasswords] = useState<{ [key: string]: string }>({
     origin: '',
     new: '',
     confirm: '',
   });
-  const count = 1;
+  const isLoggedIn = localStorage.getItem('@isLoggedIn') === 'true';
+  const userId = Number(localStorage.getItem('@user_id'));
 
-  const logoutHandler = () => {};
-  const withdrawalHandler = () => {};
+  const { data } = useGetUser(userId);
+  const { data: todos } = useCountTodos(userId);
+  const { mutate: logout } = useLogout();
+  const { mutate: withdrawal } = useWithdrawal();
+
+  const logoutHandler = () => {
+    logout({ id: userId });
+  };
+  const withdrawalHandler = () => {
+    withdrawal({ id: userId });
+  };
 
   return (
     <div style={{ position: 'relative', height: '100%' }}>
@@ -37,19 +52,37 @@ export default function My() {
           marginBottom: '30px',
         }}
       >
-        <strong style={{ fontSize: '24px', fontFamily: 'Agbalumo' }}>tester</strong>
-        <span style={{ fontSize: '16px', marginTop: '8px', marginLeft: '8px' }}>
-          {' '}
-          님, 반갑습니다!
-        </span>
+        {isLoggedIn ? (
+          <>
+            <strong style={{ fontSize: '24px', fontFamily: 'Agbalumo' }}>{data?.user.name}</strong>
+            <span style={{ fontSize: '16px', marginTop: '8px', marginLeft: '8px' }}>
+              {' '}
+              님, 반갑습니다!
+            </span>
+          </>
+        ) : (
+          <button onClick={() => navigate('/login')}>
+            <span style={{ fontSize: '22px', marginRight: '8px' }}>로그인</span>
+            <LuLogIn
+              size={20}
+              style={{ marginBottom: '-2px' }}
+            />
+          </button>
+        )}
       </div>
-      <div>
-        <div className={style.float_box}>지금까지 {count}개의 투두를 완료했어요!</div>
-      </div>
-      <div style={{ marginTop: '40px' }}>
-        <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
-      </div>
-      <Chart />
+      {isLoggedIn && (
+        <div>
+          <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
+        </div>
+      )}
+      {isLoggedIn && (
+        <>
+          <div style={{ marginTop: '40px' }}>
+            <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
+          </div>
+          <Chart />
+        </>
+      )}
       {/* 알림 설정 */}
       <div
         style={{
@@ -62,7 +95,9 @@ export default function My() {
         <strong style={{ fontSize: '18px', fontWeight: '500' }}>알림 설정</strong>
         <Toggle />
       </div>
-      <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
+      {!isLoggedIn && (
+        <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
+      )}
 
       <div
         style={{
@@ -77,7 +112,9 @@ export default function My() {
         </div>
         <Toggle />
       </div>
-      <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
+      {!isLoggedIn && (
+        <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
+      )}
       {/* 비밀번호 변경 */}
       <div style={{ marginTop: '27px', cursor: 'pointer' }}>
         <strong
@@ -88,28 +125,30 @@ export default function My() {
         </strong>
       </div>
       <div></div>
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          position: 'absolute',
-          bottom: '47px',
-          justifyContent: 'space-between',
-        }}
-      >
-        <button
-          className={style.btn}
-          onClick={logoutHandler}
+      {isLoggedIn && (
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            position: 'absolute',
+            bottom: '47px',
+            justifyContent: 'space-between',
+          }}
         >
-          로그아웃 <MdLogout />
-        </button>
-        <button
-          className={style.btn}
-          onClick={withdrawalHandler}
-        >
-          회원탈퇴 <FiDelete />
-        </button>
-      </div>
+          <button
+            className={style.btn}
+            onClick={logoutHandler}
+          >
+            로그아웃 <MdLogout />
+          </button>
+          <button
+            className={style.btn}
+            onClick={withdrawalHandler}
+          >
+            회원탈퇴 <FiDelete />
+          </button>
+        </div>
+      )}
       {isOpen && (
         <Modal
           isOpen={isOpen}

@@ -1,10 +1,10 @@
 /* eslint-disable prefer-const */
 import style from './index.module.css';
 import { FaCheck } from 'react-icons/fa6';
-import { TodoItem } from '../../../types/types';
+import { TodoItem } from '../../types/types';
 import { FiFileText } from 'react-icons/fi';
-import { useSingleCategory } from '../../../hooks/queries/useCategory';
-import { useTodoChecked } from '../../../hooks/queries/useTodo';
+import { useSingleCategory } from '../../hooks/queries/useCategory';
+import { useTodoChecked } from '../../hooks/queries/useTodo';
 import { isBefore, isYesterday, startOfToday } from 'date-fns';
 import { MdOutlineDelete } from 'react-icons/md';
 

@@ -1,9 +1,9 @@
-import TodoCard from '../../components/common/TodoCard';
+import TodoCard from '../../components/TodoCard';
 import style from './index.module.css';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { FaPlus } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
-import AddTodoCard from '../../components/common/AddTodoCard';
+import AddTodoCard from '../../components/AddTodoCard';
 import { TodoItem } from '../../types/types';
 import SelectCategoryModal from '../../components/common/modal/SelectCategoryModal';
 import SelectTimeModal from '../../components/common/modal/SelectTimeModal';
@@ -40,11 +40,9 @@ export default function Todo() {
   }, [todoList]);
 
   useEffect(() => {
-    refetch();
-  }, [current]);
-
-  useEffect(() => {
     if (current === -1) setIsAdding(false);
+
+    refetch();
   }, [current]);
 
   const addNewTodo = () => {
@@ -82,9 +80,9 @@ export default function Todo() {
         </div>
       </div>
       <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {todos.map((todo, idx) => (
+        {todos.map(todo => (
           <TodoCard
-            key={todo.title + idx}
+            key={todo.id}
             data={todo}
             onRefetch={() => refetch()}
             openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}

@@ -1,10 +1,10 @@
 import { PieChart, Cell, Pie, Legend, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { name: '제안', value: 4 },
-  { name: '접수', value: 3 },
-  { name: '완료', value: 2 },
-  { name: '보류', value: 2 },
+  { name: '일상', value: 4 },
+  { name: '작업', value: 3 },
+  { name: '학습', value: 2 },
+  { name: '기타', value: 2 },
 ];
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];

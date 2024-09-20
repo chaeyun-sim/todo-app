@@ -71,4 +71,14 @@ const useDeleteTodo = () => {
   });
 };
 
-export { useGetTodos, useTodoChecked, useAddTodo, useDeleteTodo };
+const useCountTodos = (userId: number) => {
+  return useQuery({
+    queryKey: ['count-todos', userId],
+    queryFn: async () => {
+      const result = await axios.get(`/api/todo/count/${userId}`);
+      return result.data;
+    },
+  });
+};
+
+export { useGetTodos, useTodoChecked, useAddTodo, useDeleteTodo, useCountTodos };
