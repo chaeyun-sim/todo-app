@@ -2,21 +2,16 @@ import TodoCard from '../../components/common/TodoCard';
 import style from './index.module.css';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { FaPlus } from 'react-icons/fa6';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddTodoCard from '../../components/common/AddTodoCard';
 import { TodoItem } from '../../types/types';
 import SelectCategoryModal from '../../components/common/modal/SelectCategoryModal';
 import SelectTimeModal from '../../components/common/modal/SelectTimeModal';
 import MemoModal from '../../components/common/modal/MemoModal';
-
-const TITLES = Object.assign({
-  0: 'Today',
-  1: 'Tomorrow',
-  '-1': 'Yesterday',
-});
+import { useAddTodo, useGetTodos } from '../../hooks/queries/useTodo';
+import TITLES from '../../constants/title';
 
 export default function Todo() {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [current, setCurrent] = useState(0);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -25,38 +20,40 @@ export default function Todo() {
     isTimeModalOpen: false,
     isMemoModalOpen: false,
   });
-  const [todaysText, setTodaysText] = useState('');
-  const [textCompleted, setTextCompleted] = useState(false);
-  const [inputs, setInputs] = useState<Omit<TodoItem, 'id'>>({
+  const [inputs, setInputs] = useState<Omit<TodoItem, 'id' | 'is_completed'>>({
     title: '',
-    startTime: '',
-    endTime: '',
-    category: '',
+    category_id: 0,
     memo: '',
+    start_date: '',
+    end_date: '',
   });
+  const { data: todoList, refetch } = useGetTodos({ target: TITLES[current].toLowerCase() });
+  const { mutate: addTodo } = useAddTodo();
+
+  useEffect(() => {
+    if (todoList && todoList.data) {
+      setTodos(todoList.data);
+    }
+  }, [todoList]);
+
+  useEffect(() => {
+    refetch();
+  }, [current]);
 
   useEffect(() => {
     if (current === -1) setIsAdding(false);
   }, [current]);
 
   const addNewTodo = () => {
-    if (inputs.title && inputs.startTime) {
-      const newTodos = {
-        id: todos.length + 1,
-        ...inputs,
-      };
-
-      setTodos([...todos, newTodos]);
-      setInputs({ title: '', startTime: '', endTime: '', category: '' });
+    if (inputs.title && inputs.start_date) {
+      addTodo({
+        category_id: inputs.category_id || 0,
+        title: inputs.title,
+        start_date: inputs.start_date,
+        end_date: inputs.end_date,
+        memo: inputs.memo ? inputs.memo.substring(0, 255) : '',
+      });
       setIsAdding(false);
-    }
-  };
-
-  const changeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    const lines = value.split('\n');
-    if (lines.length <= 2 && value.length <= 40) {
-      setTodaysText(value);
     }
   };
 
@@ -80,42 +77,13 @@ export default function Todo() {
             </button>
           </div>
         </div>
-        {current === 0 && (
-          <div className={style.text_box}>
-            {textCompleted && todaysText ? (
-              <span
-                className={style.text}
-                onClick={() => {
-                  setTextCompleted(false);
-                  setTimeout(() => {
-                    if (textareaRef.current) {
-                      textareaRef.current.focus();
-                      textareaRef.current.setSelectionRange(todaysText.length, todaysText.length);
-                    }
-                  }, 0);
-                }}
-              >
-                {todaysText}
-              </span>
-            ) : (
-              <textarea
-                ref={textareaRef}
-                className={style.input}
-                value={todaysText}
-                onChange={changeHandler}
-                onBlur={() => setTextCompleted(true)}
-                placeholder="Today's Text..."
-                rows={2}
-              />
-            )}
-          </div>
-        )}
       </div>
       <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {todos.map(todo => (
+        {todos.map((todo, idx) => (
           <TodoCard
-            key={todo.id}
-            {...todo}
+            key={todo.title + idx}
+            data={todo}
+            onRefetch={() => refetch()}
           />
         ))}
       </div>
@@ -180,18 +148,21 @@ export default function Todo() {
         <SelectCategoryModal
           isOpen={openModal.isCategoryModalOpen}
           onClose={() => setOpenModal({ ...openModal, isCategoryModalOpen: false })}
-          onSetCategory={category => setInputs({ ...inputs, category })}
+          onSetCategory={category_id => setInputs({ ...inputs, category_id: category_id })}
         />
       )}
       {openModal.isTimeModalOpen && (
         <SelectTimeModal
           isOpen={openModal.isTimeModalOpen}
           onClose={() => setOpenModal({ ...openModal, isTimeModalOpen: false })}
-          onSetTime={times => setInputs({ ...inputs, startTime: times.start, endTime: times.end })}
+          onSetTime={times =>
+            setInputs({ ...inputs, start_date: times.start, end_date: times.end })
+          }
           data={{
-            startTime: inputs.startTime,
-            endTime: inputs.endTime,
+            startTime: inputs.start_date,
+            endTime: inputs.end_date,
           }}
+          current={current}
         />
       )}
       {openModal.isMemoModalOpen && (

@@ -10,29 +10,39 @@ export class TodoService {
     const targetDate = dates[target || 'today'];
 
     return rows.filter((row: TodoItem) => {
-      const createdAt =
-        typeof row.created_at === 'string' ? row.created_at : getDateString(row.created_at as Date);
-      return createdAt.startsWith(targetDate);
+      const startDate =
+        typeof row.start_date === 'string' ? row.start_date : getDateString(row.start_date as Date);
+      return startDate.startsWith(targetDate);
     });
   }
 
   async addTodo({
     title,
-    date,
+    start_date,
+    end_date,
     memo,
     category_id,
   }: {
     title: string;
-    date: string;
+    start_date: string;
+    end_date: string;
     memo: string;
-    category_id: number;
+    category_id?: number | null;
   }) {
-    await this.conn.query('INSERT INTO Todo (title, date, memo, category_id) VALUES (?, ?, ?, ?)', [
-      title,
-      date,
-      memo,
-      category_id,
+    const validCategoryId = await this.validateCategoryId(category_id);
+
+    await this.conn.query(
+      'INSERT INTO Todo (title, start_date, end_date, memo, category_id) VALUES (?, ?, ?, ?, ?)',
+      [title, start_date, end_date, memo, validCategoryId === 0 ? null : validCategoryId]
+    );
+  }
+
+  private async validateCategoryId(categoryId?: number | null): Promise<number | null> {
+    if (categoryId == null || categoryId === 0) return null;
+    const [category] = await this.conn.query('SELECT id FROM Categories WHERE id = ?', [
+      categoryId,
     ]);
+    return category ? categoryId : null;
   }
 
   async updateTodo(body: { [key: string]: string }, id: number) {
@@ -52,5 +62,18 @@ export class TodoService {
 
     await this.conn.query('DELETE FROM Todo WHERE id = ?', [id]);
     return { success: true };
+  }
+
+  async checkTodo(id: number) {
+    const rows = await this.conn.query('SELECT * FROM Todo WHERE id = ?', [id]);
+
+    if (!rows || rows.length === 0) return false;
+
+    const currentTodo = rows[0];
+    const newIsCompleted = !currentTodo.is_completed;
+
+    await this.conn.query('UPDATE Todo SET is_completed = ? WHERE id = ?', [newIsCompleted, id]);
+
+    return true;
   }
 }

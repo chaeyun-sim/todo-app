@@ -19,7 +19,7 @@ router.get(
 );
 
 // POST "/" - 개별 데이터 등록
-// req.body - title, date, memo, category_id
+// req.body - title, start_date, end_date, memo, category_id
 router.post(
   '/',
   asyncHandler(async (req: express.Request, res: express.Response) => {
@@ -43,6 +43,26 @@ router.put(
     await req.todoService.updateTodo(req.body, Number(req.params.id));
 
     res.json({ success: true, message: `${req.params.id}번 투두를 수정했습니다.` });
+  })
+);
+
+// PUT "/:id/check" - 투두 완료 여부
+router.put(
+  '/:id/check',
+  asyncHandler(async (req: express.Request, res: express.Response) => {
+    const result = await req.todoService.checkTodo(Number(req.params.id));
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: '일치하는 데이터가 없습니다.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `${req.params.id}의 완료 여부를 수정했습니다.`,
+    });
   })
 );
 

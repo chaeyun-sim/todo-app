@@ -28,6 +28,11 @@ export class CategoryService {
     return data;
   }
 
+  async getCategory(id: number) {
+    const data = await this.conn.query('SELECT * FROM Categories WHERE id = ?', [id]);
+    return data;
+  }
+
   async deleteCategory(id: string) {
     const data = await this.conn.query('SELECT * FROM Categories');
 

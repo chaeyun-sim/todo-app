@@ -112,6 +112,25 @@
  *       500:
  *         $ref: '#/components/responses/ErrorResponse'
  *
+ * /api/todo/{id}/check:
+ *   put:
+ *     summary: 투두 완료 여부 수정하기
+ *     tags: [Todo]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: 투두 ID
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/SuccessResponse'
+ *       404:
+ *         $ref: '#/components/responses/ErrorResponse'
+ *       500:
+ *         $ref: '#/components/responses/ErrorResponse'
+ *
  * /api/todo/{id}:
  *   put:
  *     summary: 투두 수정하기

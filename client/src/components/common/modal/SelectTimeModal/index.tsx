@@ -2,10 +2,13 @@ import Modal, { ModalProps } from '../index';
 import style from './index.module.css';
 import { GrPowerReset } from 'react-icons/gr';
 import { useEffect, useState } from 'react';
+import TITLES from '../../../../constants/title';
+import { getDates } from '../../../../../../server/src/utils/dateUtils';
 
 interface SelectTimeModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   onSetTime: (times: { start: string; end: string }) => void;
   data: { startTime: string; endTime: string };
+  current: number;
 }
 
 export default function SelectTimeModal({
@@ -13,6 +16,7 @@ export default function SelectTimeModal({
   onClose,
   onSetTime,
   data,
+  current,
 }: SelectTimeModalProps) {
   const [times, setTimes] = useState({
     startHour: '',
@@ -28,22 +32,18 @@ export default function SelectTimeModal({
 
   useEffect(() => {
     if (times.startHour && !times.startMinute) {
-      setTimes({ ...times, startMinute: '00' });
+      setTimes(prev => ({ ...prev, startMinute: '00' }));
     }
 
     if (times.startHour && times.startMinute && (!times.endHour || !times.endMinute)) {
-      setTimes({ ...times, endHour: times.startHour, endMinute: times.startMinute });
+      setTimes(prev => ({ ...prev, endHour: times.startHour, endMinute: times.startMinute }));
     }
 
-    if (times.endHour && times.endMinute) {
-      const start = new Date(2024, 2, 1, Number(times.startHour), Number(times.endHour));
-      const end = new Date(2024, 2, 1, Number(times.endHour), Number(times.endMinute));
+    if (times.startHour && times.startMinute && times.endHour && times.endMinute) {
+      const start = new Date(2024, 0, 1, Number(times.startHour), Number(times.startMinute));
+      const end = new Date(2024, 0, 1, Number(times.endHour), Number(times.endMinute));
 
-      if (
-        Number(times.endHour) > 0 &&
-        Number(times.endMinute) > 0 &&
-        start.getTime() - end.getTime() > 60000
-      ) {
+      if (end < start) {
         setErrorMessage('종료 시간은 시작 시간보다 늦어야 합니다.');
       } else {
         setErrorMessage('');
@@ -52,25 +52,33 @@ export default function SelectTimeModal({
   }, [times]);
 
   useEffect(() => {
-    if (data) {
-      const [startH, startM] = data.startTime.split(':');
-      const [endH, endM] = data.endTime.split(':');
-      setTimes({ startHour: startH, startMinute: startM, endHour: endH, endMinute: endM });
+    if (data?.startTime && typeof data.startTime === 'string') {
+      const [startHour, startMinute] = data.startTime.split(' ')[1].split(':');
+      setTimes(prev => ({ ...prev, startHour, startMinute }));
+    }
+    if (data?.endTime && typeof data.endTime === 'string') {
+      const [endHour, endMinute] = data.endTime.split(' ')[1].split(':');
+      setTimes(prev => ({ ...prev, endHour, endMinute }));
     }
   }, [data]);
 
   const handleSubmit = () => {
-    if (!times.startHour && !times.startMinute) {
-      onSetTime({ start: '', end: '' });
-      onClose();
-    } else {
-      setErrorMessage('올바른 시간을 설정해 주세요.');
-    }
+    if (!errorMessage) {
+      const startTime = `${times.startHour}:${times.startMinute}`;
+      const endTime = `${times.endHour}:${times.endMinute}`;
+      const dates = getDates();
+      const dateKey = TITLES[current].toLowerCase() as keyof typeof dates;
 
-    if (times.startHour && times.startMinute && times.endHour && times.endMinute) {
+      const date = dates[dateKey];
+
+      if (!date) {
+        console.error(`No date found for key: ${dateKey}`);
+        return;
+      }
+
       onSetTime({
-        start: `${times.startHour}:${times.startMinute}`,
-        end: `${times.endHour}:${times.endMinute}`,
+        start: `${date.slice(0, 10)} ${startTime}`,
+        end: `${date.slice(0, 10)} ${endTime}`,
       });
       onClose();
     }

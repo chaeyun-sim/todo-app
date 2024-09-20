@@ -24,6 +24,19 @@
   max-height: 500px;
 }
 
+.todo_container_expired {
+  max-height: 56px;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  cursor: pointer;
+  transition: max-height 0.8s ease;
+  overflow: hidden;
+  border: 1px solid #ebebeb;
+}
+
 .check_box {
   border: 1.8px solid #e8e8e8;
   height: 16px;

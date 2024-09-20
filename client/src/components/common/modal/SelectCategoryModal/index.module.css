@@ -46,14 +46,16 @@
   height: 37px;
 }
 
-.input_length {
+.select_color {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
   position: absolute;
-  right: 13px;
-  bottom: 0;
+  right: 10px;
+  top: 50%;
   transform: translateY(-50%);
-  font-size: 13px;
-  margin-bottom: 2.5px;
-  color: #7c7c7c;
+  margin-top: 5px;
+  cursor: pointer;
 }
 
 .submit_box {

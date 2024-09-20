@@ -41,6 +41,19 @@ router.get(
   })
 );
 
+// GET "/api/category/:id"- 개별 카테고리 조회
+router.get(
+  '/:id',
+  asyncHandler(async (req: express.Request, res: express.Response) => {
+    const data = await req.categoryService.getCategory(Number(req.params.id));
+
+    return res.status(200).json({
+      success: true,
+      data: data || null,
+    });
+  })
+);
+
 // DELETE "/api/category/:id"
 // 개별 카테고리 삭제
 router.delete(
