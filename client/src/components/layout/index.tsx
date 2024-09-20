@@ -71,6 +71,7 @@ export default function Layout({ children }: PropsWithChildren) {
           </header>
         )}
         <div className={style.children}>{children}</div>
+        <footer className={style.footer}>© 2024 chaeyun-sim.</footer>
       </div>
       {isOpen && (
         <NotificationModal
