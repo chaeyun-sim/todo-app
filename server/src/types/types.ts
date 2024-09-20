@@ -24,3 +24,11 @@ export type CategoryItem = {
   name: string;
   color: string;
 };
+
+export type ReminderItem = {
+  id: number;
+  todo_id: number;
+  reminder_time: string;
+  message: string;
+  created_at: string;
+};
