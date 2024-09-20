@@ -18,3 +18,17 @@ export type UserItem = {
   created_at: string;
   completed_todos: string;
 };
+
+export type CategoryItem = {
+  id: number;
+  name: string;
+  color: string;
+};
+
+export type ReminderItem = {
+  id: number;
+  todo_id: number;
+  reminder_time: string;
+  message: string;
+  created_at: string;
+};

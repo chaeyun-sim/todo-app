@@ -16,11 +16,22 @@ export class TodoService {
     });
   }
 
-  async addTodo({ title, date, memo }: { title: string; date: string; memo: string }) {
-    await this.conn.query('INSERT INTO Todo (title, date, memo) VALUES (?, ?, ?)', [
+  async addTodo({
+    title,
+    date,
+    memo,
+    category_id,
+  }: {
+    title: string;
+    date: string;
+    memo: string;
+    category_id: number;
+  }) {
+    await this.conn.query('INSERT INTO Todo (title, date, memo, category_id) VALUES (?, ?, ?, ?)', [
       title,
       date,
       memo,
+      category_id,
     ]);
   }
 
@@ -32,7 +43,7 @@ export class TodoService {
     await this.conn.query(`UPDATE Todo SET ${makeSQL} WHERE id = ?`, [Object.values(body), id]);
   }
 
-  async deleteTodo(id: string): Promise<{ success: boolean; message?: string }> {
+  async deleteTodo(id: string) {
     const [rows] = await this.conn.query('SELECT * FROM Todo WHERE id = ?', [id]);
 
     if (rows.length === 0) {
