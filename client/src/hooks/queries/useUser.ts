@@ -12,6 +12,7 @@ const useLogout = () => {
     },
     onSuccess: () => {
       localStorage.removeItem('@token');
+      localStorage.removeItem('@user');
       navigate('/');
     },
     onError: error => {
@@ -30,6 +31,7 @@ const useWithdrawal = () => {
     },
     onSuccess: () => {
       localStorage.removeItem('@token');
+      localStorage.removeItem('@user');
       navigate('/');
     },
   });

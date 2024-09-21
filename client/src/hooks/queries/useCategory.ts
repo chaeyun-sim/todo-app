@@ -8,12 +8,15 @@ const useSingleCategory = (id: number) => {
   return useQuery({
     queryKey: ['category', id],
     queryFn: async () => {
-      const result = await axiosInstance.get(`/category/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return result.data;
+      if (id > 0 && token) {
+        const result = await axiosInstance.get(`/category/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return result.data;
+      }
+      return [];
     },
   });
 };
@@ -25,6 +28,7 @@ const useCategories = () => {
       const result = await axios.get(`/category`);
       return result.data;
     },
+    enabled: !!token,
   });
 };
 
@@ -82,6 +86,7 @@ const useGetTodoCountByCategory = () => {
       });
       return result.data;
     },
+    enabled: !!token,
   });
 };
 

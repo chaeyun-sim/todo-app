@@ -1,13 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '../../api/instance';
 
+const token = localStorage.getItem('@token');
+
 const useGetTodos = ({ target }: { target: 'yesterday' | 'today' | 'tomorrow' }) => {
   return useQuery({
     queryKey: ['get-todos', target],
     queryFn: async () => {
-      const result = await axiosInstance.get(`/todo?target=${target}`);
-      return result.data;
+      if (token) {
+        const result = await axiosInstance.get(`/todo?target=${target}`);
+        return result.data;
+      }
+      return [];
     },
+    enabled: !!token,
   });
 };
 
@@ -78,6 +84,7 @@ const useCountTodos = () => {
       const result = await axiosInstance.get(`/todo/count`);
       return result.data;
     },
+    enabled: !!token,
   });
 };
 

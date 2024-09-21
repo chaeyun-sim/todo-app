@@ -3,6 +3,7 @@ import { KeyboardEventHandler, useEffect, useState } from 'react';
 import { TodoItem } from '../../types/types';
 import style from './index.module.css';
 import { useSingleCategory } from '../../hooks/queries/useCategory';
+import { categoriesWithoutToken } from '../common/modal/SelectCategoryModal';
 
 interface AddTodoCardProps {
   inputs: Omit<TodoItem, 'id' | 'is_completed'>;
@@ -25,6 +26,8 @@ export default function AddTodoCard({
   const { category_id, title, start_date, end_date } = inputs;
 
   const { data: category, refetch } = useSingleCategory(Number(category_id));
+
+  const token = localStorage.getItem('@token');
 
   useEffect(() => {
     refetch();
@@ -146,7 +149,10 @@ export default function AddTodoCard({
             <button
               className={style.category}
               style={{
-                backgroundColor: category?.data[0].color || 'white',
+                backgroundColor: token
+                  ? category?.data[0].color || 'white'
+                  : categoriesWithoutToken.filter(el => el.id === inputs.category_id)[0].color ||
+                    'white',
               }}
               onClick={openCategoryModal}
             />

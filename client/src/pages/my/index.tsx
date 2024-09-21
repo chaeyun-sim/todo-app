@@ -19,11 +19,23 @@ export default function My() {
   const { mutate: logout } = useLogout();
   const { mutate: withdrawal } = useWithdrawal();
 
+  const token = localStorage.getItem('@token');
+
   const logoutHandler = () => {
-    logout({ id: user?.id });
+    if (token) {
+      logout({ id: user?.id });
+    } else {
+      localStorage.removeItem('@token');
+      localStorage.removeItem('@user');
+    }
   };
   const withdrawalHandler = () => {
-    withdrawal({ id: user?.id });
+    if (token) {
+      withdrawal({ id: user?.id });
+    } else {
+      localStorage.removeItem('@token');
+      localStorage.removeItem('@user');
+    }
   };
 
   return (
@@ -54,9 +66,11 @@ export default function My() {
           </button>
         )}
       </div>
-      <div>
-        <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
-      </div>
+      {user && (
+        <div>
+          <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
+        </div>
+      )}
       {user && (
         <>
           <div style={{ marginTop: '40px' }}>
