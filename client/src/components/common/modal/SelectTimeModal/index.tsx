@@ -39,17 +39,6 @@ export default function SelectTimeModal({
       setTimes(prev => ({ ...prev, endHour: times.startHour, endMinute: times.startMinute }));
     }
 
-    if (times.startHour && times.startMinute && times.endHour && times.endMinute) {
-      const start = new Date(2024, 0, 1, Number(times.startHour), Number(times.startMinute));
-      const end = new Date(2024, 0, 1, Number(times.endHour), Number(times.endMinute));
-
-      if (end < start) {
-        setErrorMessage('종료 시간은 시작 시간보다 늦어야 합니다.');
-      } else {
-        setErrorMessage('');
-      }
-    }
-
     if (TITLES[current].toLowerCase() === 'today') {
       const now = new Date();
       const currentHour = now.getHours();
@@ -64,11 +53,24 @@ export default function SelectTimeModal({
         } else {
           setErrorMessage('');
         }
+      }
+    }
+
+    if (times.startHour && times.startMinute && times.endHour && times.endMinute) {
+      const start = new Date(
+        2024,
+        0,
+        1,
+        parseInt(times.startHour, 10),
+        parseInt(times.startMinute, 10)
+      );
+      const end = new Date(2024, 0, 1, parseInt(times.endHour, 10), parseInt(times.endMinute, 10));
+
+      if (end < start) {
+        setErrorMessage('종료 시간은 시작 시간보다 늦어야 합니다.');
       } else {
         setErrorMessage('');
       }
-    } else {
-      setErrorMessage('');
     }
   }, [times, current]);
 
@@ -84,25 +86,25 @@ export default function SelectTimeModal({
   }, [data]);
 
   const handleSubmit = () => {
-    if (!errorMessage) {
-      const startTime = `${times.startHour}:${times.startMinute}`;
-      const endTime = `${times.endHour}:${times.endMinute}`;
-      const dates = getDates();
-      const dateKey = TITLES[current].toLowerCase() as keyof typeof dates;
+    if (errorMessage) return;
 
-      const date = dates[dateKey];
+    const startTime = `${times.startHour}:${times.startMinute}`;
+    const endTime = `${times.endHour}:${times.endMinute}`;
+    const dates = getDates();
+    const dateKey = TITLES[current].toLowerCase() as keyof typeof dates;
 
-      if (!date) {
-        console.error(`No date found for key: ${dateKey}`);
-        return;
-      }
+    const date = dates[dateKey];
 
-      onSetTime({
-        start: `${date.slice(0, 10)} ${startTime}`,
-        end: `${date.slice(0, 10)} ${endTime}`,
-      });
-      onClose();
+    if (!date) {
+      console.error(`No date found for key: ${dateKey}`);
+      return;
     }
+
+    onSetTime({
+      start: `${date.slice(0, 10)} ${startTime}`,
+      end: `${date.slice(0, 10)} ${endTime}`,
+    });
+    onClose();
   };
 
   return (
