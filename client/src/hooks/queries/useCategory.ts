@@ -52,4 +52,20 @@ const useDeleteCategory = () => {
   });
 };
 
-export { useSingleCategory, useCategories, useAddCategory, useDeleteCategory };
+const useGetTodoCountByCategory = () => {
+  return useQuery({
+    queryKey: ['todo-count-by-category'],
+    queryFn: async () => {
+      const result = await axios.get(`/api/category/stats/todos`);
+      return result.data;
+    },
+  });
+};
+
+export {
+  useSingleCategory,
+  useCategories,
+  useAddCategory,
+  useDeleteCategory,
+  useGetTodoCountByCategory,
+};
