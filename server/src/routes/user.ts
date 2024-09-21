@@ -64,4 +64,25 @@ router.delete(
   })
 );
 
+// 비밀번호 변경
+// req.body - origin, newPassword, newConfirm
+router.put(
+  '/password/:id',
+  asyncHandler(async (req: express.Request, res: express.Response) => {
+    const result = await req.userService.changePassword(req.body, Number(req.params.id));
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: '일치하는 데이터가 없습니다.',
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: '비밀번호가 변경되었습니다!',
+    });
+  })
+);
+
 export default router;

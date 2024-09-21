@@ -26,4 +26,16 @@ export class UserService {
     }
     return false;
   }
+
+  async changePassword(
+    body: { origin: string; newPassword: string; newConfirm: string },
+    id: number
+  ) {
+    const rows = await this.conn.query('UPDATE User SET password = ? WHERE ID = ?', [
+      body.newPassword,
+      id,
+    ]);
+
+    return rows;
+  }
 }

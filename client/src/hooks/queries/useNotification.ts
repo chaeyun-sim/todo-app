@@ -12,7 +12,7 @@ const useAddReminder = () => {
       reminder_time: string;
       message: '';
     }) => {
-      const result = await axios.post('/api/reminder', {
+      const result = await axios.post('/reminder', {
         todo_id,
         reminder_time,
         message,

@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import axiosInstance from '../../api/instance';
 
 const useGetTodos = ({ target }: { target: 'yesterday' | 'today' | 'tomorrow' }) => {
   return useQuery({
     queryKey: ['get-todos', target],
     queryFn: async () => {
-      const result = await axios.get(`/api/todo?target=${target}`);
+      const result = await axiosInstance.get(`/todo?target=${target}`);
       return result.data;
     },
   });
@@ -16,7 +16,7 @@ const useTodoChecked = () => {
 
   return useMutation({
     mutationFn: async ({ id }: { id: number }) => {
-      const result = await axios.put(`/api/todo/${id}/check`);
+      const result = await axiosInstance.put(`/todo/${id}/check`);
       return result.data;
     },
     onSuccess: () => {
@@ -42,7 +42,7 @@ const useAddTodo = () => {
       end_date: string;
       memo: string;
     }) => {
-      const result = await axios.post(`/api/todo/`, {
+      const result = await axiosInstance.post(`/todo/`, {
         category_id,
         title,
         start_date,
@@ -62,7 +62,7 @@ const useDeleteTodo = () => {
 
   return useMutation({
     mutationFn: async ({ id }: { id: number }) => {
-      const result = await axios.delete(`/api/todo/${id}`);
+      const result = await axiosInstance.delete(`/todo/${id}`);
       return result.data;
     },
     onSuccess: () => {
@@ -75,7 +75,7 @@ const useCountTodos = () => {
   return useQuery({
     queryKey: ['count-todos'],
     queryFn: async () => {
-      const result = await axios.get(`/api/todo/count`);
+      const result = await axiosInstance.get(`/todo/count`);
       return result.data;
     },
   });

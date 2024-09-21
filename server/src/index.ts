@@ -8,9 +8,9 @@ import userRoute from './routes/user';
 import 'reflect-metadata';
 import getConnection from './config/connection';
 import { specs } from './swagger/swagger';
-import cors from 'cors';
 import { authMiddleware } from './middlewares/authMiddleware';
 require('dotenv').config({ path: __dirname + '/./../../.env' });
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
@@ -18,13 +18,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(
-//   cors({
-//     origin: 'http://localhost:5173',
-//     credentials: true,
-//   })
-// );
-app.options('*', cors());
+app.use(cors());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
