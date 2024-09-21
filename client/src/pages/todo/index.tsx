@@ -118,23 +118,22 @@ export default function Todo() {
           </div>
         </div>
       </div>
-      {token ||
-        (!token && current === 0 && (
-          <div
-            className={style.todo_card_wrp}
-            style={{ marginBottom: !token && current === 0 ? '0' : '16px' }}
-          >
-            {todos.map(todo => (
-              <TodoCard
-                key={todo.id}
-                data={todo}
-                onRefetch={() => refetch()}
-                openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}
-                onSetId={(id: number) => setIdForDelete(id)}
-              />
-            ))}
-          </div>
-        ))}
+      {(token || (!token && current === 0)) && (
+        <div
+          className={style.todo_card_wrp}
+          style={{ marginBottom: !token && current === 0 ? '0' : '16px' }}
+        >
+          {todos.map(todo => (
+            <TodoCard
+              key={todo.id}
+              data={todo}
+              onRefetch={() => refetch()}
+              openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}
+              onSetId={(id: number) => setIdForDelete(id)}
+            />
+          ))}
+        </div>
+      )}
       {!token && todos.length === 3 && current === 0 && (
         <p className={style.more_adding_guide}>
           더 많은 투두를 추가하려면 ,<br />
