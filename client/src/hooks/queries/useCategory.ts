@@ -9,11 +9,7 @@ const useSingleCategory = (id: number) => {
     queryKey: ['category', id],
     queryFn: async () => {
       if (id > 0 && token) {
-        const result = await axiosInstance.get(`/category/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const result = await axiosInstance.get(`/category/${id}`);
         return result.data;
       }
       return [];
@@ -37,18 +33,10 @@ const useAddCategory = () => {
 
   return useMutation({
     mutationFn: async ({ name, color }: { name: string; color: string }) => {
-      const result = await axiosInstance.post(
-        '/category',
-        {
-          name,
-          color,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const result = await axiosInstance.post('/category', {
+        name,
+        color,
+      });
       return result.data;
     },
     onSuccess: () => {
@@ -62,11 +50,7 @@ const useDeleteCategory = () => {
 
   return useMutation({
     mutationFn: async ({ name }: { name: string }) => {
-      const result = await axiosInstance.delete(`/category/${name}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const result = await axiosInstance.delete(`/category/${name}`);
       return result.data;
     },
     onSuccess: () => {
@@ -79,11 +63,7 @@ const useGetTodoCountByCategory = () => {
   return useQuery({
     queryKey: ['todo-count-by-category'],
     queryFn: async () => {
-      const result = await axiosInstance.get(`/category/stats/todos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const result = await axiosInstance.get(`/category/stats/todos`);
       return result.data;
     },
     enabled: !!token,
