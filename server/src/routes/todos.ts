@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { asyncHandler } from '../middlewares/errorHandler';
 import { Middleware } from '../middlewares/middleware';
 
@@ -9,7 +9,7 @@ router.use(Middleware);
 // target = 'yesterday' | 'today' | 'tomorrow'
 router.get(
   '/',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { target } = req.query as { target?: 'yesterday' | 'today' | 'tomorrow' };
 
     const result = await req.todoService.getTodosByTarget(target);
@@ -22,7 +22,7 @@ router.get(
 // req.body - title, start_date, end_date, memo, category_id
 router.post(
   '/',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     if (!req.body.title) return res.status(400).json({ error: '"title" is required.' });
 
     await req.todoService.addTodo(req.body);
@@ -35,7 +35,7 @@ router.post(
 // req.body - 수정하고 싶은 프로퍼티
 router.put(
   '/:id',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     if (!Object.keys(req.body).length) {
       return res.status(404).json({ message: '일치하는 데이터가 없습니다.' });
     }
@@ -49,7 +49,7 @@ router.put(
 // PUT "/:id/check" - 투두 완료 여부
 router.put(
   '/:id/check',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.todoService.checkTodo(Number(req.params.id));
 
     if (!result) {
@@ -69,7 +69,7 @@ router.put(
 // DELETE "/:id" - 개발 데이터 삭제
 router.delete(
   '/:id',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.todoService.deleteTodo(req.params.id);
 
     if (!result.success) return res.status(404).json({ message: result.message });
@@ -80,7 +80,7 @@ router.delete(
 
 router.get(
   '/count',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.todoService.getCompletedTodos();
     res.json({
       success: true,

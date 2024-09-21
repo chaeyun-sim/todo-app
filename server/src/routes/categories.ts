@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { Middleware } from '../middlewares/middleware';
 import { asyncHandler, errorHandler } from '../middlewares/errorHandler';
 
@@ -10,7 +10,7 @@ router.use(errorHandler);
 // 카테고리 추가
 router.post(
   '/',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.categoryService.addCategory(req.body);
 
     if (!result) {
@@ -31,7 +31,7 @@ router.post(
 // 모든 카테고리 조회
 router.get(
   '/',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const data = await req.categoryService.getCategories();
 
     return res.status(200).json({
@@ -44,7 +44,7 @@ router.get(
 // GET "/api/category/:id"- 개별 카테고리 조회
 router.get(
   '/:id',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const data = await req.categoryService.getCategory(Number(req.params.id));
 
     return res.status(200).json({
@@ -58,7 +58,7 @@ router.get(
 // 개별 카테고리 삭제
 router.delete(
   '/:name',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.params;
 
     const result = await req.categoryService.deleteCategory(name);
@@ -76,12 +76,15 @@ router.delete(
 
 // GET "/api/category/percentage"
 // 카테고리 별 투두
-router.get('/stats/todos', async (req, res) => {
-  const result = await req.categoryService.getCategoryTodoCounts();
-  res.json({
-    success: true,
-    data: result,
-  });
-});
+router.get(
+  '/stats/todos',
+  asyncHandler(async (req: Request, res: Response) => {
+    const result = await req.categoryService.getCategoryTodoCounts();
+    res.json({
+      success: true,
+      data: result,
+    });
+  })
+);
 
 export default router;

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { Middleware } from '../middlewares/middleware';
 import { asyncHandler, errorHandler } from '../middlewares/errorHandler';
 import jwt from 'jsonwebtoken';
@@ -12,7 +12,7 @@ router.use(errorHandler);
 
 router.post(
   '/join',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.authService.join(req.body);
 
     if (!result) {
@@ -27,7 +27,7 @@ const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
 router.post(
   '/login',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.authService.login(req.body);
 
     if (!result || !result.success || !result.user) {

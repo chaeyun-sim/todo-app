@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { Middleware } from '../middlewares/middleware';
 import { asyncHandler, errorHandler } from '../middlewares/errorHandler';
 import dotenv from 'dotenv';
@@ -11,7 +11,7 @@ router.use(errorHandler);
 
 router.get(
   '/profile/:id',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.userService.getUser(Number(req.params.id));
 
     if (!result || result.length === 0) {
@@ -32,7 +32,7 @@ router.get(
 // req.body - id
 router.post(
   '/logout/',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body;
 
     await req.userService.logout(Number(id));
@@ -47,7 +47,7 @@ router.post(
 // 회원 탈퇴
 router.delete(
   '/withdrawal/:id',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.userService.withdrawal(Number(req.params.id));
 
     if (!result) {
@@ -68,7 +68,7 @@ router.delete(
 // req.body - origin, newPassword, newConfirm
 router.put(
   '/password/:id',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const result = await req.userService.changePassword(req.body, Number(req.params.id));
 
     if (!result) {

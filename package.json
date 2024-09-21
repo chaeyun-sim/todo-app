@@ -4,7 +4,7 @@
   "description": "todo-app",
   "scripts": {
     "start:client": "cd client && npm run dev",
-    "start:server": "cd server && npm run start",
+    "start:server": "cd server && npx ts-node src/index.ts",
     "start": "concurrently \"npm run start:client\" \"npm run start:server\""
   },
   "devDependencies": {
