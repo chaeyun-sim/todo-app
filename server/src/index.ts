@@ -11,6 +11,7 @@ import { specs } from './swagger/swagger';
 import { authMiddleware } from './middlewares/authMiddleware';
 require('dotenv').config({ path: __dirname + '/./../../.env' });
 import cors from 'cors';
+import pool from './config/db';
 
 const app = express();
 const port = 3000;
@@ -34,17 +35,48 @@ app.get('/', (_req, res) => {
   res.send('Hello World!');
 });
 
-async function startServer() {
+async function createTables() {
+  let conn;
   try {
-    await getConnection();
-    console.log('MariaDB 연결 성공!');
-
-    app.listen(port, () => {
-      console.log(`Server listening on port: ${port}`);
-    });
+    conn = await pool.getConnection();
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS User (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('Tables created or already exist');
   } catch (err) {
-    console.error('MariaDB 연결 실패:', err);
+    console.error('Error creating tables:', err);
+  } finally {
+    if (conn) conn.release();
   }
+}
+
+async function initializeDatabase(retries = 5) {
+  try {
+    const conn = await pool.getConnection();
+    console.log('Database connected successfully');
+    conn.release();
+  } catch (err) {
+    console.error('Error connecting to database:', err);
+    if (retries > 0) {
+      console.log(`Retrying... (${retries} attempts left)`);
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds
+      await initializeDatabase(retries - 1);
+    } else {
+      console.error('Failed to connect to database after multiple attempts');
+      process.exit(1);
+    }
+  }
+}
+
+async function startServer() {
+  await initializeDatabase();
+  await createTables();
 }
 
 startServer();

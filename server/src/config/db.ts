@@ -11,6 +11,8 @@ const pool = mariadb.createPool({
   database: 'TODO_APP',
   connectionLimit: 5,
   timezone: '+09:00',
+  connectTimeout: 10000,
+  acquireTimeout: 10000,
 });
 
 export default pool;
