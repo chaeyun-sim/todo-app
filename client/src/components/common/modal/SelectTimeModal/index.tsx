@@ -3,8 +3,7 @@ import style from './index.module.css';
 import { GrPowerReset } from 'react-icons/gr';
 import { useEffect, useState } from 'react';
 import TITLES from '../../../../constants/title';
-import { getDates } from '../../../../../../server/src/utils/dateUtils';
-
+import { getDates } from '../../../../utils/dateUtils';
 interface SelectTimeModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   onSetTime: (times: { start: string; end: string }) => void;
   data: { startTime: string; endTime: string };
