@@ -70,8 +70,15 @@ export default function Layout({ children }: PropsWithChildren) {
             )}
           </header>
         )}
-        <div className={style.children}>{children}</div>
-        <footer className={style.footer}>© 2024 chaeyun-sim.</footer>
+        <div
+          className={style.children}
+          style={{
+            height: pathname === '/my' ? 'calc(100% - 60px - 60px - 10px)' : 'calc(100% - 60px)',
+          }}
+        >
+          {children}
+        </div>
+        {pathname === '/my' && <footer className={style.footer}>© 2024 chaeyun-sim.</footer>}
       </div>
       {isOpen && (
         <NotificationModal
