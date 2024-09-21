@@ -5,7 +5,7 @@
 
 .title {
   font-family: Agbalumo;
-  font-size: 36px;
+  font-size: 26px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,7 +37,7 @@
 }
 
 .header {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .add_todo_float {
@@ -100,5 +100,39 @@
 .nav_btn {
   border: none;
   background-color: transparent;
-  padding-top: 10px;
+  height: 25px;
+}
+
+.button_grp {
+  display: flex;
+  position: absolute;
+  bottom: 47px;
+  width: 100%;
+  gap: 8px;
+}
+
+.no_data {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.more_adding_guide {
+  border-top: 1px solid lightgray;
+  width: 100%;
+  height: 30px;
+  font-size: 12px;
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 10px;
+  color: gray;
+}
+
+.todo_card_wrp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }

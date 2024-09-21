@@ -12,6 +12,24 @@ import {
 import { CategoryItem } from '../../../../types/types';
 import { HexColorPicker } from 'react-colorful';
 
+export const categoriesWithoutToken = [
+  {
+    id: 1,
+    name: '일상',
+    color: '#ff8787',
+  },
+  {
+    id: 2,
+    name: '학교',
+    color: '#8bb2ec',
+  },
+  {
+    id: 3,
+    name: '작업',
+    color: '#02c75a',
+  },
+];
+
 interface SelectCategoryModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   onSetCategory: (value: number) => void;
 }
@@ -28,9 +46,11 @@ export default function SelectCategoryModal({
   const [color, setColor] = useState('#ff8787');
   const [openColorPicker, setOpenColorPicker] = useState(false);
 
-  const { data, isLoading } = useCategories();
+  const { data } = useCategories();
   const { mutate: addCategory } = useAddCategory();
   const { mutate: deleteCategory } = useDeleteCategory();
+
+  const token = localStorage.getItem('@token');
 
   useEffect(() => {
     if (data && data.success) {
@@ -39,16 +59,33 @@ export default function SelectCategoryModal({
   }, [data]);
 
   useEffect(() => {
+    if (!token) {
+      setCategories(categoriesWithoutToken);
+    }
+  }, []);
+
+  useEffect(() => {
     if (isDeleting) setSelected('');
   }, [isDeleting]);
 
   const keyDownHandler: KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Enter' && e.nativeEvent.isComposing === false) {
       if (newCategory.trim() !== '' && newCategory) {
-        addCategory({
-          name: newCategory,
-          color,
-        });
+        if (token) {
+          addCategory({
+            name: newCategory,
+            color,
+          });
+        } else {
+          setCategories([
+            ...categories,
+            {
+              id: categories.length + 1,
+              name: newCategory,
+              color,
+            },
+          ]);
+        }
         setNewCategory('');
         setColor('#ff8787');
       }
@@ -56,7 +93,11 @@ export default function SelectCategoryModal({
   };
 
   const deletetCategory = (category: string) => {
-    deleteCategory({ name: category });
+    if (token) {
+      deleteCategory({ name: category });
+    } else {
+      setCategories(categories.filter(el => el.name !== category));
+    }
   };
 
   const submitHandler = () => {
@@ -79,114 +120,110 @@ export default function SelectCategoryModal({
       modalTitle='카테고리 선택'
       height='400px'
     >
-      {!isLoading ? (
-        <div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '14px', marginTop: '16px' }}>기본 카테고리</span>
-            <div style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
-              {categories.slice(0, 1).map(category => (
-                <button
-                  key={category.name}
-                  className={style.chip}
-                  style={{
-                    color: selected === category.name ? '#ff8787' : '#7c7c7c',
-                    border: selected === category.name ? '1px solid #ff8787' : '1px solid #7c7c7c',
-                  }}
-                  onClick={() => setSelected(category.name)}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '14px' }}>새로 추가하기 (최대 6개)</span>
-              {isDeleting ? (
-                <button onClick={() => setIsDeleting(false)}>
-                  <FaCheck
-                    size={17}
-                    color={'#15b72b'}
-                  />
-                </button>
-              ) : (
-                <button
-                  onMouseEnter={e => (e.currentTarget.style.color = '#222')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#7c7c7c')}
-                  onClick={() => setIsDeleting(true)}
-                >
-                  <MdOutlineDelete size={17} />
-                </button>
-              )}
-            </div>
-            <div style={{ position: 'relative' }}>
-              <Input
-                value={newCategory}
-                onSetValue={setNewCategory}
-                className={style.input}
-                onKeyDown={keyDownHandler}
-                maxLength={10}
-              />
-              {openColorPicker ? (
-                <HexColorPicker
-                  color={color}
-                  onChange={setColor}
-                  style={{
-                    zIndex: 1,
-                    position: 'absolute',
-                    right: 0,
-                    width: '100px',
-                    height: '100px',
-                  }}
-                  onBlur={() => setOpenColorPicker(false)}
-                />
-              ) : (
-                <button
-                  className={style.select_color}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setOpenColorPicker(true)}
-                />
-              )}
-            </div>
-            <div className={style.adding_new_chips}>
-              {categories.slice(1).map(category => (
-                <button
-                  key={category.name}
-                  className={
-                    isDeleting
-                      ? `${style.chip} ${style.added_chip} ${style.wiggle}`
-                      : `${style.chip} ${style.added_chip}`
-                  }
-                  style={{
-                    border: selected === category.name ? '1px solid #ff8787' : '1px solid #9e9e9e',
-                    color: selected === category.name ? '#ff8787' : '#7c7c7c',
-                  }}
-                  onClick={() =>
-                    isDeleting ? deletetCategory(category.name) : setSelected(category.name)
-                  }
-                >
-                  <span>{category.name}</span>
-                  {isDeleting && (
-                    <span className={style.delete_text}>
-                      <MdClose />
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className={style.submit_box}>
-            <button
-              className={style.submit_btn}
-              onClick={submitHandler}
-            >
-              선택하기
-            </button>
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: '14px', marginTop: '16px' }}>기본 카테고리</span>
+          <div style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
+            {categories.slice(0, 3).map(category => (
+              <button
+                key={category.name}
+                className={style.chip}
+                style={{
+                  color: selected === category.name ? '#ff8787' : '#7c7c7c',
+                  border: selected === category.name ? '1px solid #ff8787' : '1px solid #7c7c7c',
+                }}
+                onClick={() => setSelected(category.name)}
+              >
+                {category.name}
+              </button>
+            ))}
           </div>
         </div>
-      ) : (
-        <div>Loading...</div>
-      )}
+        <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '14px' }}>새로 추가하기 (최대 6개)</span>
+            {isDeleting ? (
+              <button onClick={() => setIsDeleting(false)}>
+                <FaCheck
+                  size={17}
+                  color={'#15b72b'}
+                />
+              </button>
+            ) : (
+              <button
+                onMouseEnter={e => (e.currentTarget.style.color = '#222')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#7c7c7c')}
+                onClick={() => setIsDeleting(true)}
+              >
+                <MdOutlineDelete size={17} />
+              </button>
+            )}
+          </div>
+          <div style={{ position: 'relative' }}>
+            <Input
+              value={newCategory}
+              onSetValue={setNewCategory}
+              className={style.input}
+              onKeyDown={keyDownHandler}
+              maxLength={10}
+            />
+            {openColorPicker ? (
+              <HexColorPicker
+                color={color}
+                onChange={setColor}
+                style={{
+                  zIndex: 1,
+                  position: 'absolute',
+                  right: 0,
+                  width: '100px',
+                  height: '100px',
+                }}
+                onBlur={() => setOpenColorPicker(false)}
+              />
+            ) : (
+              <button
+                className={style.select_color}
+                style={{ backgroundColor: color }}
+                onClick={() => setOpenColorPicker(true)}
+              />
+            )}
+          </div>
+          <div className={style.adding_new_chips}>
+            {categories.slice(3).map(category => (
+              <button
+                key={category.name}
+                className={
+                  isDeleting
+                    ? `${style.chip} ${style.added_chip} ${style.wiggle}`
+                    : `${style.chip} ${style.added_chip}`
+                }
+                style={{
+                  border: selected === category.name ? '1px solid #ff8787' : '1px solid #9e9e9e',
+                  color: selected === category.name ? '#ff8787' : '#7c7c7c',
+                }}
+                onClick={() =>
+                  isDeleting ? deletetCategory(category.name) : setSelected(category.name)
+                }
+              >
+                <span>{category.name}</span>
+                {isDeleting && (
+                  <span className={style.delete_text}>
+                    <MdClose />
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className={style.submit_box}>
+          <button
+            className={style.submit_btn}
+            onClick={submitHandler}
+          >
+            선택하기
+          </button>
+        </div>
+      </div>
     </Modal>
   );
 }

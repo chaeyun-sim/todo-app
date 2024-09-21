@@ -79,9 +79,9 @@ router.delete(
 );
 
 router.get(
-  '/count/:user_id',
+  '/count',
   asyncHandler(async (req: express.Request, res: express.Response) => {
-    const result = await req.todoService.getCompletedTodos(Number(req.params.user_id));
+    const result = await req.todoService.getCompletedTodos();
     res.json({
       success: true,
       count: result.length,

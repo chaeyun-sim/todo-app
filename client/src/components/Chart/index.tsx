@@ -1,13 +1,7 @@
 import { PieChart, Cell, Pie, Legend, ResponsiveContainer } from 'recharts';
+import { useGetTodoCountByCategory } from '../../hooks/queries/useCategory';
+import { useEffect, useState } from 'react';
 
-const data = [
-  { name: '일상', value: 4 },
-  { name: '작업', value: 3 },
-  { name: '학습', value: 2 },
-  { name: '기타', value: 2 },
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
   cx,
@@ -41,17 +35,42 @@ const renderCustomizedLabel = ({
   );
 };
 
+type ChartItem = {
+  name: string;
+  count: number;
+  id: number;
+  color: string;
+};
+
 const Chart = () => {
+  const [chartData, setChartData] = useState<{ name: string; value: number }[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
+
+  const { data: todoCount } = useGetTodoCountByCategory();
+
+  useEffect(() => {
+    if (todoCount?.data) {
+      setChartData(
+        todoCount.data?.map((el: ChartItem) => {
+          return {
+            name: el.name,
+            value: el.count,
+          };
+        })
+      );
+
+      setColors(todoCount?.data.map((el: ChartItem) => el.color));
+    }
+  }, [todoCount]);
+
   return (
     <ResponsiveContainer
       width={330}
       height={170}
       className='text-center'
+      style={{ pointerEvents: 'none' }}
     >
-      <PieChart
-        width={400}
-        height={400}
-      >
+      <PieChart>
         <Legend
           layout='vertical'
           verticalAlign='middle'
@@ -59,7 +78,7 @@ const Chart = () => {
           wrapperStyle={{ paddingRight: '10px' }}
         />
         <Pie
-          data={data}
+          data={chartData}
           cx='45%'
           cy='50%'
           labelLine={false}
@@ -67,11 +86,13 @@ const Chart = () => {
           outerRadius={80}
           fill='#8884d8'
           dataKey='value'
+          style={{ outline: 'none' }}
         >
-          {data.map((_, index) => (
+          {chartData.map((el, index) => (
             <Cell
-              key={`cell-${index}`}
-              fill={COLORS[index % COLORS.length]}
+              key={el.name + el.value}
+              fill={colors[index % colors.length]}
+              style={{ outline: 'none' }}
             />
           ))}
         </Pie>

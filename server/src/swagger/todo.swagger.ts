@@ -2,53 +2,209 @@
  * @swagger
  * tags:
  *   name: Todo
- *   description: 투두 API
+ *   description: 할 일 관련 API
+ *
+ * /api/todo:
+ *   get:
+ *     summary: 특정 날짜의 할 일 목록 조회
+ *     tags: [Todo]
+ *     parameters:
+ *       - in: query
+ *         name: target
+ *         schema:
+ *           type: string
+ *           enum: [yesterday, today, tomorrow]
+ *         description: 조회할 날짜 (기본값 - today)
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TodoItem'
+ *       '500':
+ *         $ref: '#/components/responses/ServerError'
+ *
+ *   post:
+ *     summary: 새로운 할 일 추가
+ *     tags: [Todo]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewTodo'
+ *     responses:
+ *       '201':
+ *         $ref: '#/components/responses/SuccessResponse'
+ *       '500':
+ *         $ref: '#/components/responses/ServerError'
+ *
+ * /api/todo/{id}:
+ *   put:
+ *     summary: 할 일 수정
+ *     tags: [Todo]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: 할 일 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateTodo'
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/SuccessResponse'
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/ServerError'
+ *
+ *   delete:
+ *     summary: 할 일 삭제
+ *     tags: [Todo]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 할 일 ID
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/SuccessResponse'
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/ServerError'
+ *
+ * /api/todo/{id}/check:
+ *   put:
+ *     summary: 할 일 완료 상태 토글
+ *     tags: [Todo]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: 할 일 ID
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/SuccessResponse'
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/ServerError'
+ *
+ * /api/todo/completed:
+ *   get:
+ *     summary: 완료된 할 일 목록 조회
+ *     tags: [Todo]
+ *     responses:
+ *       '200':
+ *         description: 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TodoItem'
+ *       '500':
+ *         $ref: '#/components/responses/ServerError'
  *
  * components:
  *   schemas:
- *     Todo:
+ *     TodoItem:
  *       type: object
  *       properties:
  *         id:
  *           type: integer
- *           example: 3
- *           description: 투두 ID
- *         user_id:
- *           type: integer
- *           example: 3
- *           description: 유저 ID
- *         category_id:
- *           type: integer
- *           example: 3
- *           description: 카테고리 ID
+ *           description: 할 일 ID
  *         title:
  *           type: string
- *           example: 제목입니다
- *           description: 제목
- *         date:
+ *           description: 할 일 제목
+ *         start_date:
  *           type: string
- *           example: 2024-09-19 22:00:00
- *           description: 날짜
+ *           format: date-time
+ *           description: 시작 날짜
+ *         end_date:
+ *           type: string
+ *           format: date-time
+ *           description: 종료 날짜
  *         memo:
  *           type: string
- *           example: 메모입니다
  *           description: 메모
- *         created_at:
- *           type: string
- *           example: 2024-09-19 22:00:00
- *           description: 생성 일자
- *         updated_at:
- *           type: string
- *           example: 2024-09-19 22:00:00
- *           description: 수정 일자
+ *         category_id:
+ *           type: integer
+ *           nullable: true
+ *           description: 카테고리 ID
  *         is_completed:
  *           type: boolean
- *           example: false
- *           description: 투두 완료 여부
+ *           description: 완료 여부
+ *
+ *     NewTodo:
+ *       type: object
+ *       required:
+ *         - title
+ *         - start_date
+ *         - end_date
+ *         - memo
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: 할 일 제목
+ *         start_date:
+ *           type: string
+ *           format: date-time
+ *           description: 시작 날짜
+ *         end_date:
+ *           type: string
+ *           format: date-time
+ *           description: 종료 날짜
+ *         memo:
+ *           type: string
+ *           description: 메모
+ *         category_id:
+ *           type: integer
+ *           nullable: true
+ *           description: 카테고리 ID
+ *
+ *     UpdateTodo:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: 할 일 제목
+ *         start_date:
+ *           type: string
+ *           format: date-time
+ *           description: 시작 날짜
+ *         end_date:
+ *           type: string
+ *           format: date-time
+ *           description: 종료 날짜
+ *         memo:
+ *           type: string
+ *           description: 메모
+ *         category_id:
+ *           type: integer
+ *           nullable: true
+ *           description: 카테고리 ID
+ *         is_completed:
+ *           type: boolean
+ *           description: 완료 여부
  *
  *   responses:
  *     SuccessResponse:
- *       description: OK
+ *       description: 성공
  *       content:
  *         application/json:
  *           schema:
@@ -57,13 +213,11 @@
  *               success:
  *                 type: boolean
  *                 example: true
- *                 description: 성공 여부
  *               message:
  *                 type: string
- *                 description: 성공 메시지
- *
- *     ErrorResponse:
- *       description: 에러 응답
+ *                 example: 성공적으로 처리되었습니다.
+ *     NotFoundError:
+ *       description: 찾을 수 없음
  *       content:
  *         application/json:
  *           schema:
@@ -72,105 +226,20 @@
  *               success:
  *                 type: boolean
  *                 example: false
- *                 description: 성공 여부
  *               message:
  *                 type: string
- *                 description: 에러 메세지
- *
- * /api/todo:
- *   get:
- *     summary: 날짜에 맞는 투두 전체 가져오기
- *     tags: [Todo]
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Todo'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
- *
- *   post:
- *     summary: 투두 추가하기
- *     tags: [Todo]
- *     requestBody:
- *       required: true
+ *                 example: 일치하는 데이터가 없습니다.
+ *     ServerError:
+ *       description: 서버 오류
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Todo'
- *     responses:
- *       200:
- *         $ref: '#/components/responses/SuccessResponse'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
- *
- * /api/todo/{id}/check:
- *   put:
- *     summary: 투두 완료 여부 수정하기
- *     tags: [Todo]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: 투두 ID
- *     responses:
- *       200:
- *         $ref: '#/components/responses/SuccessResponse'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
- *
- * /api/todo/{id}:
- *   put:
- *     summary: 투두 수정하기
- *     tags: [Todo]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: 투두 ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Todo'
- *     responses:
- *       200:
- *         $ref: '#/components/responses/SuccessResponse'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
- *
- *   delete:
- *     summary: 투두 삭제하기
- *     tags: [Todo]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: 투두 ID
- *     responses:
- *       200:
- *         $ref: '#/components/responses/SuccessResponse'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
+ *             type: object
+ *             properties:
+ *               success:
+ *                 type: boolean
+ *                 example: false
+ *               message:
+ *                 type: string
+ *                 example: 서버 오류가 발생했습니다.
  */

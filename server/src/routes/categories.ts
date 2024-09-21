@@ -76,16 +76,12 @@ router.delete(
 
 // GET "/api/category/percentage"
 // 카테고리 별 투두
-router.get(
-  '/percentage',
-  asyncHandler(async (req: express.Request, res: express.Response) => {
-    const result = await req.categoryService.getCategoryTodoCounts();
-
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
-  })
-);
+router.get('/stats/todos', async (req, res) => {
+  const result = await req.categoryService.getCategoryTodoCounts();
+  res.json({
+    success: true,
+    data: result,
+  });
+});
 
 export default router;

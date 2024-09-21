@@ -9,11 +9,19 @@ export class TodoService {
     const dates = getDates();
     const targetDate = dates[target || 'today'];
 
-    return rows.filter((row: TodoItem) => {
-      const startDate =
-        typeof row.start_date === 'string' ? row.start_date : getDateString(row.start_date as Date);
-      return startDate.startsWith(targetDate);
-    });
+    return rows
+      .filter((row: TodoItem) => {
+        const startDate =
+          typeof row.start_date === 'string'
+            ? row.start_date
+            : getDateString(row.start_date as Date);
+        return startDate.startsWith(targetDate);
+      })
+      .sort((a: TodoItem, b: TodoItem) => {
+        const dateA = new Date(a.start_date);
+        const dateB = new Date(b.start_date);
+        return Number(a.is_completed) - Number(b.is_completed) || dateA.getTime() - dateB.getTime();
+      });
   }
 
   async addTodo({
@@ -77,11 +85,8 @@ export class TodoService {
     return true;
   }
 
-  async getCompletedTodos(userId: number) {
-    const result = await this.conn.query(
-      'SELECT * FROM Todo WHERE user_id = ? AND is_completed = true',
-      [userId]
-    );
+  async getCompletedTodos() {
+    const result = await this.conn.query('SELECT * FROM Todo WHERE is_completed = true');
     return result;
   }
 }

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,22 +28,15 @@ const useLogin = () => {
 
   return useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      try {
-        const result = await axios.post('/api/auth/login', {
-          email,
-          password,
-        });
-        return result.data;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          throw new Error(error.response?.data?.message || '로그인에 실패했습니다.');
-        }
-        throw error;
-      }
+      const result = await axios.post('/api/auth/login', {
+        email,
+        password,
+      });
+      return result.data;
     },
     onSuccess: data => {
-      localStorage.setItem('@isLoggedIn', 'true');
-      localStorage.setItem('@user_id', data.user.id);
+      localStorage.setItem('@token', data.token);
+      localStorage.setItem('@user', JSON.stringify(data.user));
       navigate('/');
     },
     onError: (error: Error) => {
@@ -52,46 +45,4 @@ const useLogin = () => {
   });
 };
 
-const useGetUser = (id: number) => {
-  return useQuery({
-    queryKey: ['user', id],
-    queryFn: async () => {
-      const result = await axios.get(`/api/auth/user/${id}`);
-      return result.data;
-    },
-  });
-};
-
-const useLogout = () => {
-  const navigate = useNavigate();
-
-  return useMutation({
-    mutationFn: async ({ id }: { id: number }) => {
-      const result = await axios.post('/api/auth/logout', { id });
-      return result.data;
-    },
-    onSuccess: () => {
-      localStorage.setItem('@isLoggedIn', 'false');
-      localStorage.removeItem('@user_id');
-      navigate('/');
-    },
-  });
-};
-
-const useWithdrawal = () => {
-  const navigate = useNavigate();
-
-  return useMutation({
-    mutationFn: async ({ id }: { id: number }) => {
-      const result = await axios.delete(`/api/auth/withdrawal/${id}`);
-      return result.data;
-    },
-    onSuccess: () => {
-      localStorage.setItem('@isLoggedIn', 'false');
-      localStorage.removeItem('@user_id');
-      navigate('/');
-    },
-  });
-};
-
-export { useJoin, useLogin, useGetUser, useLogout, useWithdrawal };
+export { useJoin, useLogin };

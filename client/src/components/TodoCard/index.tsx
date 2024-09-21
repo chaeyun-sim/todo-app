@@ -5,8 +5,10 @@ import { TodoItem } from '../../types/types';
 import { FiFileText } from 'react-icons/fi';
 import { useSingleCategory } from '../../hooks/queries/useCategory';
 import { useTodoChecked } from '../../hooks/queries/useTodo';
-import { isBefore, isYesterday, startOfToday } from 'date-fns';
+import { isYesterday } from 'date-fns';
 import { MdOutlineDelete } from 'react-icons/md';
+import { categoriesWithoutToken } from '../common/modal/SelectCategoryModal';
+import { useEffect, useState } from 'react';
 
 interface TodoCardProps {
   data: TodoItem;
@@ -16,15 +18,23 @@ interface TodoCardProps {
 }
 
 export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: TodoCardProps) {
-  const { id, is_completed, title, start_date, end_date, memo, category_id, created_at } = data;
+  let { id, is_completed, title, start_date, end_date, memo, category_id } = data;
+  const [checked, setChecked] = useState(false);
 
   const { data: category } = useSingleCategory(Number(category_id));
   const { mutate } = useTodoChecked();
 
+  const token = localStorage.getItem('@token');
+  const checkCompleted = token ? is_completed : checked;
+
+  useEffect(() => {
+    setChecked(is_completed);
+  }, []);
+
   const isExpired = () => {
-    if (!created_at) return false;
-    const createdDate = new Date(created_at);
-    return isYesterday(createdDate) || isBefore(createdDate, startOfToday());
+    if (!start_date) return false;
+    const createdDate = new Date(start_date);
+    return isYesterday(createdDate);
   };
 
   const expired = isExpired();
@@ -46,8 +56,12 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
 
   const checkHandler = () => {
     if (!expired) {
-      mutate({ id: id });
-      onRefetch();
+      if (token) {
+        mutate({ id: id });
+        onRefetch();
+      } else {
+        setChecked(!checked);
+      }
     }
   };
 
@@ -56,13 +70,13 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
       className={
         expired
           ? `${style.todo_container_expired}`
-          : is_completed
+          : checkCompleted
           ? `${style.todo_container}`
           : `${style.todo_container} ${style.todo_container_active}`
       }
       style={{ cursor: !title || expired ? 'default' : 'pointer' }}
     >
-      {is_completed ? (
+      {checkCompleted ? (
         <button
           className={style.check_box}
           onClick={checkHandler}
@@ -86,9 +100,9 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
           className={style.todo_title}
           style={{
             width: !title && !category_id ? '250px' : '200px',
-            textDecorationLine: is_completed || expired ? 'line-through' : 'none',
+            textDecorationLine: checkCompleted ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
-            color: is_completed || expired ? '#cacaca' : '#404040',
+            color: checkCompleted || expired ? '#cacaca' : '#404040',
           }}
         >
           {title}
@@ -96,20 +110,20 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
         <div
           className={style.todo_time}
           style={{
-            textDecorationLine: is_completed || expired ? 'line-through' : 'none',
+            textDecorationLine: checkCompleted ? 'line-through' : 'none',
             textDecorationColor: '#BABABA',
-            color: is_completed || expired ? '#cacaca' : '#404040',
+            color: checkCompleted || expired ? '#cacaca' : '#404040',
           }}
         >
           {convertTime(start_date) === convertTime(end_date)
             ? convertTime(start_date)
             : `${convertTime(start_date)} - ${convertTime(end_date)}`}
         </div>
-        {memo && (
+        {!checkCompleted && memo && (
           <div
             className={style.todo_memo}
             style={{
-              color: is_completed || expired ? '#E8E8E8' : '#404040',
+              color: checkCompleted || expired ? '#E8E8E8' : '#404040',
             }}
           >
             <pre
@@ -124,33 +138,39 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
             </pre>
           </div>
         )}
-        <div className={`${style.todo_memo} ${style.edit}`}>
-          <button
-            style={{ width: '25px' }}
-            onClick={() => {
-              onSetId(id);
-              openDeleteModal();
-            }}
-          >
-            <MdOutlineDelete
-              size={18}
-              stroke='1'
-            />
-          </button>
-        </div>
+        {!checkCompleted && (
+          <div className={`${style.todo_memo} ${style.edit}`}>
+            <button
+              style={{ width: '25px' }}
+              onClick={() => {
+                onSetId(id);
+                openDeleteModal();
+              }}
+            >
+              <MdOutlineDelete
+                size={18}
+                stroke='1'
+              />
+            </button>
+          </div>
+        )}
       </div>
       {memo && (
         <div
           className={style.category}
           style={{ right: '40px' }}
         >
-          <FiFileText color={is_completed || expired ? 'transparent' : '#505050'} />
+          <FiFileText color={checkCompleted || expired ? '#cacaca' : '#505050'} />
         </div>
       )}
-      {category_id! > 0 && !is_completed && (
+      {category_id! > 0 && (
         <div
           className={style.category}
-          style={{ backgroundColor: category?.data[0].color }}
+          style={{
+            backgroundColor: token
+              ? category?.data[0].color
+              : categoriesWithoutToken.filter(el => el.id === category_id)[0].color,
+          }}
         />
       )}
     </div>
