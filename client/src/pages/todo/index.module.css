@@ -102,3 +102,38 @@
   background-color: transparent;
   padding-top: 10px;
 }
+
+.button_grp {
+  display: flex;
+  position: absolute;
+  bottom: 47px;
+  width: 100%;
+  gap: 8px;
+}
+
+.no_data {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.more_adding_guide {
+  border-top: 1px solid lightgray;
+  width: 100%;
+  height: 30px;
+  font-size: 12px;
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 10px;
+  color: gray;
+}
+
+.todo_card_wrp {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

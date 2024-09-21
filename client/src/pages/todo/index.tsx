@@ -110,33 +110,32 @@ export default function Todo() {
           </div>
         </div>
       </div>
-      {token && (
-        <div
-          style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}
-        >
-          {todos.map(todo => (
-            <TodoCard
-              key={todo.id}
-              data={todo}
-              onRefetch={() => refetch()}
-              openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}
-              onSetId={(id: number) => setIdForDelete(id)}
-            />
-          ))}
-        </div>
-      )}
-
-      <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {todos.map(todo => (
-          <TodoCard
-            key={todo.id}
-            data={todo}
-            onRefetch={() => refetch()}
-            openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}
-            onSetId={(id: number) => setIdForDelete(id)}
-          />
+      {token ||
+        (!token && current === 0 && (
+          <div className={style.todo_card_wrp}>
+            {todos.map(todo => (
+              <TodoCard
+                key={todo.id}
+                data={todo}
+                onRefetch={() => refetch()}
+                openDeleteModal={() => setOpenModal({ ...openModal, isDeleteModalOpen: true })}
+                onSetId={(id: number) => setIdForDelete(id)}
+              />
+            ))}
+          </div>
         ))}
-      </div>
+      {!token && todos.length === 3 && current === 0 && (
+        <p className={style.more_adding_guide}>
+          더 많은 투두를 추가하려면 ,<br />
+          <Link
+            to='/login'
+            style={{ textDecoration: 'none', fontWeight: '600' }}
+          >
+            로그인
+          </Link>
+          을 해보세요!
+        </p>
+      )}
       {current > -1 && isAdding && (
         <AddTodoCard
           inputs={inputs}
@@ -146,41 +145,13 @@ export default function Todo() {
           openMemoModal={() => setOpenModal({ ...openModal, isMemoModalOpen: true })}
         />
       )}
-      {!todos.length && !isAdding && (
-        <div
-          style={{
-            height: '50%',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+      {!token && current !== 0 && (
+        <div className={style.no_data}>
           <h1>No Todos</h1>
-          {current !== 0 && !token && (
-            <p>
-              <Link
-                to={'/login'}
-                style={{ color: '#7094c9', textDecoration: 'none', fontWeight: '600' }}
-              >
-                로그인
-              </Link>
-              으로 투두 추가하기!
-            </p>
-          )}
         </div>
       )}
       {current > -1 && isAdding && (
-        <div
-          style={{
-            display: 'flex',
-            position: 'absolute',
-            bottom: '47px',
-            width: '100%',
-            gap: '8px',
-          }}
-        >
+        <div className={style.button_grp}>
           <button
             className={style.cancel_btn}
             onClick={() => setIsAdding(false)}
