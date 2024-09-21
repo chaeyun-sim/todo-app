@@ -27,6 +27,7 @@ export default function My() {
     } else {
       localStorage.removeItem('@token');
       localStorage.removeItem('@user');
+      navigate('/');
     }
   };
   const withdrawalHandler = () => {
@@ -35,6 +36,7 @@ export default function My() {
     } else {
       localStorage.removeItem('@token');
       localStorage.removeItem('@user');
+      navigate('/');
     }
   };
 
@@ -95,7 +97,7 @@ export default function My() {
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
 
-      {/* <div
+      <div
         style={{
           marginTop: '27px',
           display: 'flex',
@@ -107,13 +109,13 @@ export default function My() {
           <strong style={{ fontSize: '18px', fontWeight: '500' }}>데이터 저장</strong>
         </div>
         <Toggle
-          checked={isLoggedIn}
+          checked={!!token}
           disabled={true}
         />
       </div>
-      {!isLoggedIn && (
+      {!token && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
-      )} */}
+      )}
       {/* 비밀번호 변경 */}
       {user && (
         <div style={{ marginTop: '27px', cursor: 'pointer' }}>
