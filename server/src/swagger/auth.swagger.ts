@@ -1,131 +1,140 @@
 /**
  * @swagger
  * tags:
- *   name: Auth
- *   description: 로그인 및 회원가입 API
+ *   name: Authentication
+ *   description: 인증 관련 API
+ *
+ * paths:
+ *   /auth/join:
+ *     post:
+ *       summary: 회원가입
+ *       tags: [Authentication]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - name
+ *                 - email
+ *                 - password
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: 홍길동
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                   example: hong@example.com
+ *                 password:
+ *                   type: string
+ *                   format: password
+ *                   example: password123
+ *       responses:
+ *         200:
+ *           description: 회원가입 성공
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   success:
+ *                     type: boolean
+ *                     example: true
+ *                   message:
+ *                     type: string
+ *                     example: 홍길동님, 회원가입 되었습니다.
+ *         404:
+ *           description: 이미 존재하는 사용자
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   success:
+ *                     type: boolean
+ *                     example: false
+ *                   message:
+ *                     type: string
+ *                     example: 이미 존재하는 유저입니다.
+ *
+ *   /auth/login:
+ *     post:
+ *       summary: 로그인
+ *       tags: [Authentication]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - email
+ *                 - password
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                   example: hong@example.com
+ *                 password:
+ *                   type: string
+ *                   format: password
+ *                   example: password123
+ *       responses:
+ *         200:
+ *           description: 로그인 성공
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   success:
+ *                     type: boolean
+ *                     example: true
+ *                   message:
+ *                     type: string
+ *                     example: 로그인에 성공했습니다.
+ *                   token:
+ *                     type: string
+ *                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                   user:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                         example: 홍길동
+ *                       email:
+ *                         type: string
+ *                         example: hong@example.com
+ *         401:
+ *           description: 로그인 실패
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   success:
+ *                     type: boolean
+ *                     example: false
+ *                   message:
+ *                     type: string
+ *                     example: 로그인에 실패했습니다.
  *
  * components:
  *   schemas:
  *     User:
  *       type: object
  *       properties:
- *         id:
- *           type: integer
- *           example: 1
- *           description: 사용자 ID
- *         email:
- *           type: string
- *           example: admin@admin.com
- *           description: 사용자 이메일
  *         name:
  *           type: string
- *           example: admin
- *           description: 사용자 이름
- *         created_at:
+ *           example: 홍길동
+ *         email:
  *           type: string
- *           format: date-time
- *           example: "2024-09-19T07:34:54.000Z"
- *           description: 계정 생성 일시
- *         completed_todos:
- *           type: integer
- *           example: 0
- *           description: 완료된 할 일 개수
- *
- *   responses:
- *     SuccessResponse:
- *       description: OK
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               success:
- *                 type: boolean
- *                 example: true
- *                 description: 성공 여부
- *               message:
- *                 type: string
- *                 description: 성공 메시지
- *
- *     ErrorResponse:
- *       description: 에러 응답
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               success:
- *                 type: boolean
- *                 example: false
- *                 description: 성공 여부
- *               message:
- *                 type: string
- *                 description: 에러 메세지
- *
- * /api/auth/login:
- *   post:
- *     summary: 로그인
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 example: admin@admin.com
- *                 description: 사용자 이메일
- *               password:
- *                 type: string
- *                 example: password123
- *                 description: 사용자 비밀번호
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/responses/SuccessResponse'
- *                 - type: object
- *                   properties:
- *                     user:
- *                       $ref: '#/components/schemas/User'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
- *
- * /api/auth/join:
- *   post:
- *     summary: 회원가입
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: admin
- *                 description: 사용자 이름
- *               email:
- *                 type: string
- *                 example: admin@admin.com
- *                 description: 사용자 이메일
- *               password:
- *                 type: string
- *                 example: password123
- *                 description: 사용자 비밀번호
- *     responses:
- *       200:
- *         $ref: '#/components/responses/SuccessResponse'
- *       404:
- *         $ref: '#/components/responses/ErrorResponse'
- *       500:
- *         $ref: '#/components/responses/ErrorResponse'
+ *           format: email
+ *           example: hong@example.com
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: password123
  */

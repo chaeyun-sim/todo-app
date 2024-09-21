@@ -75,16 +75,17 @@
  *         500:
  *           $ref: '#/components/responses/ServerError'
  *
+ *   /api/category/{name}:
  *     delete:
  *       summary: 카테고리 삭제
  *       tags: [Category]
  *       parameters:
  *         - in: path
- *           name: id
+ *           name: name
  *           required: true
  *           schema:
- *             type: integer
- *           description: 카테고리 ID
+ *             type: string
+ *           description: 카테고리 이름
  *       responses:
  *         200:
  *           $ref: '#/components/responses/SuccessResponse'
@@ -93,7 +94,7 @@
  *         500:
  *           $ref: '#/components/responses/ServerError'
  *
- *   /api/category/percentage:
+ *   /api/category/stats/todos:
  *     get:
  *       summary: 카테고리 별 투두 수
  *       tags: [Category]
