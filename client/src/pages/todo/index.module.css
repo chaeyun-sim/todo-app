@@ -5,7 +5,7 @@
 
 .title {
   font-family: Agbalumo;
-  font-size: 36px;
+  font-size: 26px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,7 +37,7 @@
 }
 
 .header {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .add_todo_float {

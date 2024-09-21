@@ -32,7 +32,6 @@ export default function My() {
 
   const { data } = useGetUser(userId);
   const { data: todos } = useCountTodos();
-  console.log(todos);
   const { mutate: logout } = useLogout();
   const { mutate: withdrawal } = useWithdrawal();
 
@@ -98,7 +97,7 @@ export default function My() {
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
 
-      <div
+      {/* <div
         style={{
           marginTop: '27px',
           display: 'flex',
@@ -111,12 +110,12 @@ export default function My() {
         </div>
         <Toggle
           checked={isLoggedIn}
-          disabled={!isLoggedIn}
+          disabled={true}
         />
       </div>
       {!isLoggedIn && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
-      )}
+      )} */}
       {/* 비밀번호 변경 */}
       {isLoggedIn && (
         <div style={{ marginTop: '27px', cursor: 'pointer' }}>
