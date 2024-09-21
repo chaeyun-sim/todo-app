@@ -12,20 +12,20 @@ export default function Router() {
         path='/'
         element={<Todo />}
       />
-      <Route
-        path='/login'
-        element={<Login />}
-      />
       <Route element={<RedirectRoute />}>
+        <Route
+          path='/login'
+          element={<Login />}
+        />
         <Route
           path='/join'
           element={<Join />}
         />
-        <Route
-          path='/my'
-          element={<My />}
-        />
       </Route>
+      <Route
+        path='/my'
+        element={<My />}
+      />
     </Routes>
   );
 }
