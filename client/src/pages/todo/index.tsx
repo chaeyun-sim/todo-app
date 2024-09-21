@@ -97,22 +97,33 @@ export default function Todo() {
             <button
               className={style.nav_btn}
               onClick={() => (current === -1 ? null : setCurrent(current - 1))}
+              style={{ cursor: current > -1 ? 'pointer' : 'default' }}
             >
-              <MdNavigateBefore size={25} />
+              <MdNavigateBefore
+                size={25}
+                color={current === -1 ? '#c1c1c1' : 'black'}
+              />
             </button>
             {TITLES[current]}
             <button
               className={style.nav_btn}
               onClick={() => (current === 1 ? null : setCurrent(current + 1))}
+              style={{ cursor: current < 1 ? 'pointer' : 'default' }}
             >
-              <MdNavigateNext size={25} />
+              <MdNavigateNext
+                size={25}
+                color={current === 1 ? '#c1c1c1' : 'black'}
+              />
             </button>
           </div>
         </div>
       </div>
       {token ||
         (!token && current === 0 && (
-          <div className={style.todo_card_wrp}>
+          <div
+            className={style.todo_card_wrp}
+            style={{ marginBottom: !token && current === 0 ? '0' : '16px' }}
+          >
             {todos.map(todo => (
               <TodoCard
                 key={todo.id}
@@ -145,7 +156,7 @@ export default function Todo() {
           openMemoModal={() => setOpenModal({ ...openModal, isMemoModalOpen: true })}
         />
       )}
-      {!token && current !== 0 && (
+      {!todos.length && (
         <div className={style.no_data}>
           <h1>No Todos</h1>
         </div>

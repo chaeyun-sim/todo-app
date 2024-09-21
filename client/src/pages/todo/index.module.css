@@ -100,7 +100,7 @@
 .nav_btn {
   border: none;
   background-color: transparent;
-  padding-top: 10px;
+  height: 25px;
 }
 
 .button_grp {
@@ -132,7 +132,6 @@
 }
 
 .todo_card_wrp {
-  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
