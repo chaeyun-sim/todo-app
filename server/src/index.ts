@@ -12,6 +12,7 @@ import { authMiddleware } from './middlewares/authMiddleware';
 import mariadb from 'mariadb'; // MariaDB 연결 풀 추가
 require('dotenv').config({ path: __dirname + '/./../../.env' });
 import cors from 'cors';
+import createTables from './config/createTable';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -58,6 +59,7 @@ async function startServer() {
   try {
     await getConnection();
     console.log('MariaDB 연결 성공!');
+    await createTables();
     app.listen(PORT, () => {
       console.log(`Server listening on port: ${PORT}`);
     });

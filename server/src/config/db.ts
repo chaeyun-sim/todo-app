@@ -9,7 +9,7 @@ const pool = mariadb.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: 'TODO_APP',
-  connectionLimit: 5,
+  connectionLimit: 10,
   timezone: '+09:00',
   connectTimeout: 10000,
   acquireTimeout: 10000,
