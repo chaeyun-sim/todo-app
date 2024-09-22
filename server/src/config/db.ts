@@ -13,6 +13,9 @@ const pool = mariadb.createPool({
   timezone: '+09:00',
   connectTimeout: 10000,
   acquireTimeout: 10000,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 export default pool;
