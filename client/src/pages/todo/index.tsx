@@ -35,6 +35,7 @@ export default function Todo() {
   const { data: todoList, refetch } = useGetTodos({ target: TITLES[current].toLowerCase() });
   const { mutate: addTodo } = useAddTodo();
   const token = localStorage.getItem('@token');
+  const user = JSON.parse(localStorage.getItem('@user')!);
 
   useEffect(() => {
     if (todoList && todoList.data) {
@@ -56,6 +57,7 @@ export default function Todo() {
         start_date: inputs.start_date,
         end_date: inputs.end_date,
         memo: inputs.memo ? inputs.memo.substring(0, 255) : '',
+        user_id: user.id,
       };
       if (token) {
         addTodo(newTodo);
@@ -155,7 +157,7 @@ export default function Todo() {
           openMemoModal={() => setOpenModal({ ...openModal, isMemoModalOpen: true })}
         />
       )}
-      {!todos.length && (
+      {!todos.length && !isAdding && (
         <div className={style.no_data}>
           <h1>No Todos</h1>
         </div>

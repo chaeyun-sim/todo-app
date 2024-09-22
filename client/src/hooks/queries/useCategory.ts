@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import axiosInstance from '../../api/instance';
 
 const token = localStorage.getItem('@token');
@@ -21,7 +20,7 @@ const useCategories = () => {
   return useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const result = await axios.get(`/category`);
+      const result = await axiosInstance.get(`/category`);
       return result.data;
     },
     enabled: !!token,

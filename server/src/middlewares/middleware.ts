@@ -6,11 +6,10 @@ import { CategoryService } from '../services/categoryService';
 import { ReminderService } from '../services/reminderService';
 import { UserService } from '../services/userService';
 
-const connectionPromise = getConnection();
-
 export const Middleware = async (req: Request, _res: Response, next: NextFunction) => {
+  const conn = await getConnection();
+
   try {
-    const conn = await connectionPromise;
     req.todoService = new TodoService(conn);
     req.authService = new AuthService(conn);
     req.categoryService = new CategoryService(conn);
@@ -20,6 +19,8 @@ export const Middleware = async (req: Request, _res: Response, next: NextFunctio
     next();
   } catch (error) {
     next(error);
+  } finally {
+    if (conn) conn.release();
   }
 };
 

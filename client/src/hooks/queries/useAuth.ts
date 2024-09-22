@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const useJoin = () => {
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: async ({
       name,
@@ -13,12 +15,16 @@ const useJoin = () => {
       email: string;
       password: string;
     }) => {
+      console.log(`go : `, name, email, password);
       const result = await axios.post('/api/auth/join', {
         name,
         email,
         password,
       });
       return result.data;
+    },
+    onSuccess: () => {
+      navigate('/login');
     },
   });
 };

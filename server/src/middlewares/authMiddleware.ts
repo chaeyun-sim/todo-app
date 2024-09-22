@@ -5,7 +5,7 @@ require('dotenv').config({ path: __dirname + '/./../../.env' });
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const publicRoutes = ['/api/auth/login', '/api/auth/register'];
+  const publicRoutes = ['/api/auth/login', '/api/auth/join'];
 
   if (publicRoutes.includes(req.path)) {
     return next();

@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
-import { Middleware } from '../middlewares/middleware';
 import { asyncHandler, errorHandler } from '../middlewares/errorHandler';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { Middleware } from '../middlewares/middleware';
 
 dotenv.config();
 

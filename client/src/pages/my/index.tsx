@@ -78,8 +78,15 @@ export default function My() {
           <div style={{ marginTop: '40px' }}>
             <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
           </div>
-          <Chart />
+          {todos?.count > 0 ? (
+            <Chart />
+          ) : (
+            <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
+          )}
         </>
+      )}
+      {!user && (
+        <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
       {/* 알림 설정 */}
       <div

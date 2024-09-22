@@ -121,25 +121,10 @@ export default function SelectCategoryModal({
       height='400px'
     >
       <div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span style={{ fontSize: '14px', marginTop: '16px' }}>기본 카테고리</span>
-          <div style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
-            {categories.slice(0, 3).map(category => (
-              <button
-                key={category.name}
-                className={style.chip}
-                style={{
-                  color: selected === category.name ? '#ff8787' : '#7c7c7c',
-                  border: selected === category.name ? '1px solid #ff8787' : '1px solid #7c7c7c',
-                }}
-                onClick={() => setSelected(category.name)}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column' }}>
+        </div> */}
+        <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '14px' }}>새로 추가하기 (최대 6개)</span>
             {isDeleting ? (
@@ -189,7 +174,7 @@ export default function SelectCategoryModal({
             )}
           </div>
           <div className={style.adding_new_chips}>
-            {categories.slice(3).map(category => (
+            {categories.map(category => (
               <button
                 key={category.name}
                 className={

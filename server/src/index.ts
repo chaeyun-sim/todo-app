@@ -15,7 +15,7 @@ import cors from 'cors';
 import createTables from './config/createTable';
 
 const app = express();
-const PORT = process.env.DB_PORT;
+const PORT = process.env.SERVER_PORT || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,10 +24,10 @@ app.use(cors());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+app.use('/api/auth', authRoute);
 app.use(authMiddleware);
 
 app.use('/api/todo', todoRoute);
-app.use('/api/auth', authRoute);
 app.use('/api/category', categoryRoute);
 app.use('/api/reminder', reminderRoute);
 app.use('/api/user', userRoute);
