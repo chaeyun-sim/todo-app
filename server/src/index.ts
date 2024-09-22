@@ -15,7 +15,7 @@ import cors from 'cors';
 import createTables from './config/createTable';
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.DB_PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -65,6 +65,7 @@ async function startServer() {
     });
   } catch (err) {
     console.error('MariaDB 연결 실패:', err);
+    process.exit(1);
   }
 }
 
