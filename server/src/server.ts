@@ -15,18 +15,28 @@ import cors from 'cors';
 import createTables from './config/createTable';
 
 const app = express();
-const PORT = process.env.SERVER_PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://todo-app-client-sepia-gamma.vercel.app/'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use('*', cors(corsOptions));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/api/auth', authRoute);
+app.get('/', (_req, res) => {
+  res.send('Hello World!');
+});
+
 app.use(authMiddleware);
 
+app.use('/api/auth', authRoute);
 app.use('/api/todo', todoRoute);
 app.use('/api/category', categoryRoute);
 app.use('/api/reminder', reminderRoute);
@@ -49,10 +59,6 @@ app.get('/health', async (req, res) => {
       .status(500)
       .json({ status: 'ERROR', message: 'Database connection failed', error: err.message });
   }
-});
-
-app.get('/', (_req, res) => {
-  res.send('Hello World!');
 });
 
 async function startServer() {
