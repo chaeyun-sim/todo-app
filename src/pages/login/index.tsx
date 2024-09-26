@@ -73,7 +73,7 @@ export default function Login() {
         </div>
         {error && (
           <p style={{ color: 'crimson', marginBottom: '10px' }}>
-            {error instanceof Error ? error.message : '로그인에 실패했습니다.'}
+            {'로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.'}
           </p>
         )}
         <div className={style.submit_box}>

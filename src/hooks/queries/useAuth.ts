@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,6 +30,7 @@ const useJoin = () => {
 
 const useLogin = () => {
   const navigate = useNavigate();
+  const queryClient = new QueryClient();
 
   return useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
@@ -42,6 +43,7 @@ const useLogin = () => {
     onSuccess: data => {
       localStorage.setItem('@token', data.token);
       localStorage.setItem('@user', JSON.stringify(data.user));
+      queryClient.invalidateQueries({ queryKey: ['get-todos'] });
       navigate('/');
     },
     onError: (error: Error) => {

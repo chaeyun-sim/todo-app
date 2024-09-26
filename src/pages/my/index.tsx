@@ -53,7 +53,7 @@ export default function My() {
           marginBottom: '30px',
         }}
       >
-        {user.id ? (
+        {user?.id ? (
           <>
             <strong style={{ fontSize: '24px', fontFamily: 'Agbalumo' }}>{user?.name}</strong>
             <span style={{ fontSize: '16px', marginTop: '8px', marginLeft: '8px' }}>
@@ -71,14 +71,14 @@ export default function My() {
           </button>
         )}
       </div>
-      {user.id && (
+      {user?.id && (
         <div>
           <div className={style.float_box}>
             지금까지 {todos?.data.length}개의 투두를 완료했어요!
           </div>
         </div>
       )}
-      {user.id && (
+      {user?.id && (
         <>
           <div style={{ marginTop: '40px' }}>
             <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
@@ -109,7 +109,7 @@ export default function My() {
         <strong style={{ fontSize: '18px', fontWeight: '500' }}>알림 설정</strong>
         <Toggle disabled={!user} />
       </div>
-      {!user.id && (
+      {!user?.id && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
 
