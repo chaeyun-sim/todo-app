@@ -28,18 +28,14 @@ export default function My() {
     if (token) {
       logout({ id: user?.id });
     } else {
-      localStorage.removeItem('@token');
-      localStorage.removeItem('@user');
-      navigate('/');
+      alert('로그아웃 실패');
     }
   };
   const withdrawalHandler = () => {
-    if (token) {
+    if (token && user.id) {
       withdrawal({ id: user?.id });
     } else {
-      localStorage.removeItem('@token');
-      localStorage.removeItem('@user');
-      navigate('/');
+      alert('탈퇴 실패');
     }
   };
 
