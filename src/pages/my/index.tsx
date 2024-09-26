@@ -16,7 +16,7 @@ export default function My() {
   const [isOpen, setIsOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('@user')!);
 
-  const { data: todos } = useGetTodos({ target: 'today' });
+  const { data: todos } = useGetTodos({ target: 'today', userId: user.id });
   const { mutate: logout } = useLogout();
   const { mutate: withdrawal } = useWithdrawal();
 

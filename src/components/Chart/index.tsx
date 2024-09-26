@@ -39,9 +39,10 @@ const renderCustomizedLabel = ({
 
 const Chart = () => {
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>([]);
+  const user = JSON.parse(localStorage.getItem('@user')!);
 
   const { data: categories } = useCategories();
-  const { data: todos } = useGetTodos({ target: 'today' });
+  const { data: todos } = useGetTodos({ target: 'today', userId: user.id });
   const todoCount = todos.data.filter((el: TodoItem) => el.category_id);
 
   useEffect(() => {
