@@ -150,7 +150,7 @@ export default function AddTodoCard({
               className={style.category}
               style={{
                 backgroundColor: token
-                  ? category?.data[0].color || 'white'
+                  ? category?.data?.[0].color || 'white'
                   : categoriesWithoutToken.filter(el => el.id === inputs.category_id)[0].color ||
                     'white',
               }}

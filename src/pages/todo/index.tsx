@@ -37,13 +37,13 @@ export default function Todo() {
 
   const { data: todoList, refetch } = useGetTodos({
     target: TITLES[current].toLowerCase(),
-    userId: user.id,
+    userId: user?.id,
   });
   const { mutate: addTodo } = useAddTodo();
 
   useEffect(() => {
-    if (todoList && todoList.data) {
-      setTodos(todoList.data);
+    if (todoList && todoList?.data) {
+      setTodos(todoList?.data);
     }
   }, [todoList]);
 
@@ -56,7 +56,7 @@ export default function Todo() {
   const addNewTodo = () => {
     if (inputs.title && inputs.start_date) {
       const newTodo = {
-        user_id: user.id,
+        user_id: user?.id,
         category_id: inputs.category_id || 0,
         title: inputs.title,
         start_date: inputs.start_date,

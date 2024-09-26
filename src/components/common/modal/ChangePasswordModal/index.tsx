@@ -36,7 +36,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: Omit<ModalProps
 
     if (!errorMessage) {
       mutate({
-        id: user.id,
+        id: user?.id,
         origin: passwords.origin,
         newPassword: passwords.new,
         newConfirm: passwords.confirm,

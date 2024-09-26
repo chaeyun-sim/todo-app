@@ -168,7 +168,7 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
           className={style.category}
           style={{
             backgroundColor: token
-              ? category?.data[0].color
+              ? category?.data?.[0].color
               : categoriesWithoutToken.filter(el => el.id === category_id)[0].color,
           }}
         />

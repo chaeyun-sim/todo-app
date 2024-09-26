@@ -16,13 +16,13 @@ export default function My() {
   const [isOpen, setIsOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('@user')!);
 
-  const { data: todos } = useGetTodos({ target: 'today', userId: user.id });
+  const { data: todos } = useGetTodos({ target: 'today', userId: user?.id });
   const { mutate: logout } = useLogout();
   const { mutate: withdrawal } = useWithdrawal();
 
   const token = localStorage.getItem('@token');
 
-  const todoCount = todos?.data.filter((el: TodoItem) => el.category_id);
+  const todoCount = todos?.data?.filter((el: TodoItem) => el.category_id);
 
   const logoutHandler = () => {
     if (token) {
@@ -32,7 +32,7 @@ export default function My() {
     }
   };
   const withdrawalHandler = () => {
-    if (token && user.id) {
+    if (token && user?.id) {
       withdrawal({ id: user?.id });
     } else {
       alert('탈퇴 실패');
@@ -70,7 +70,7 @@ export default function My() {
       {user?.id && (
         <div>
           <div className={style.float_box}>
-            지금까지 {todos?.data.length}개의 투두를 완료했어요!
+            지금까지 {todos?.data?.length}개의 투두를 완료했어요!
           </div>
         </div>
       )}
@@ -79,12 +79,12 @@ export default function My() {
           <div style={{ marginTop: '40px' }}>
             <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
           </div>
-          {todoCount?.length && todos?.data.length && <Chart />}
-          {todoCount?.length === 0 && todos?.data.length > 0 && (
+          {todoCount?.length && todos?.data?.length && <Chart />}
+          {todoCount?.length === 0 && todos?.data?.length > 0 && (
             <span style={{ fontSize: '13px' }}>카테고리를 등록해주세요 :)</span>
           )}
 
-          {!todoCount?.length && !todos?.data.length && (
+          {!todoCount?.length && !todos?.data?.length && (
             <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
           )}
         </>

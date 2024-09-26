@@ -42,15 +42,15 @@ const Chart = () => {
   const user = JSON.parse(localStorage.getItem('@user')!);
 
   const { data: categories } = useCategories();
-  const { data: todos } = useGetTodos({ target: 'today', userId: user.id });
-  const todoCount = todos.data.filter((el: TodoItem) => el.category_id);
+  const { data: todos } = useGetTodos({ target: 'today', userId: user?.id });
+  const todoCount = todos?.data?.filter((el: TodoItem) => el.category_id);
 
   useEffect(() => {
-    if (categories && todos) {
+    if (categories?.data && todos?.data) {
       const db = new Map();
 
       todoCount.forEach((item: TodoItem) => {
-        const category = categories?.data.filter((el: CategoryItem) => el.id === item.category_id);
+        const category = categories?.data?.filter((el: CategoryItem) => el.id === item.category_id);
         if (category && category.length > 0) {
           const categoryData = category[0];
           db.set(categoryData.name, (db.get(categoryData.name) || 0) + 1);
