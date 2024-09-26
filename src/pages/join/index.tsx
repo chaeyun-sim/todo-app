@@ -39,8 +39,6 @@ export default function Join() {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(inputs);
-    console.log(`2: `, inputs);
     mutate({
       name: inputs.name,
       email: inputs.email,

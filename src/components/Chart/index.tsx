@@ -1,6 +1,8 @@
 import { PieChart, Cell, Pie, Legend, ResponsiveContainer } from 'recharts';
-import { useGetTodoCountByCategory } from '../../hooks/queries/useCategory';
+import { useCategories } from '../../hooks/queries/useCategory';
 import { useEffect, useState } from 'react';
+import { useGetTodos } from '../../hooks/queries/useTodo';
+import { CategoryItem, TodoItem } from '../../types/types';
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -35,33 +37,32 @@ const renderCustomizedLabel = ({
   );
 };
 
-type ChartItem = {
-  name: string;
-  count: number;
-  id: number;
-  color: string;
-};
-
 const Chart = () => {
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>([]);
-  const [colors, setColors] = useState<string[]>([]);
 
-  const { data: todoCount } = useGetTodoCountByCategory();
+  const { data: categories } = useCategories();
+  const { data: todos } = useGetTodos({ target: 'today' });
+  const todoCount = todos.data.filter((el: TodoItem) => el.category_id);
 
   useEffect(() => {
-    if (todoCount?.data) {
-      setChartData(
-        todoCount.data?.map((el: ChartItem) => {
-          return {
-            name: el.name,
-            value: el.count,
-          };
-        })
-      );
+    if (categories && todos) {
+      const db = new Map();
 
-      setColors(todoCount?.data.map((el: ChartItem) => el.color));
+      todoCount.forEach((item: TodoItem) => {
+        const category = categories?.data.filter((el: CategoryItem) => el.id === item.category_id);
+        if (category && category.length > 0) {
+          const categoryData = category[0];
+          db.set(categoryData.name, (db.get(categoryData.name) || 0) + 1);
+        }
+      });
+      const newChartData = Array.from(db.entries()).map(([key, value]) => ({
+        name: key,
+        value: value,
+      }));
+
+      setChartData(newChartData);
     }
-  }, [todoCount]);
+  }, [categories, todos]);
 
   return (
     <ResponsiveContainer
@@ -88,10 +89,9 @@ const Chart = () => {
           dataKey='value'
           style={{ outline: 'none' }}
         >
-          {chartData.map((el, index) => (
+          {chartData.map(el => (
             <Cell
               key={el.name + el.value}
-              fill={colors[index % colors.length]}
               style={{ outline: 'none' }}
             />
           ))}
