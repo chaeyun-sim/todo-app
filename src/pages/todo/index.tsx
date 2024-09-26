@@ -32,10 +32,14 @@ export default function Todo() {
   });
   const [idForDelete, setIdForDelete] = useState(0);
 
-  const { data: todoList, refetch } = useGetTodos({ target: TITLES[current].toLowerCase() });
-  const { mutate: addTodo } = useAddTodo();
   const token = localStorage.getItem('@token');
   const user = JSON.parse(localStorage.getItem('@user')!);
+
+  const { data: todoList, refetch } = useGetTodos({
+    target: TITLES[current].toLowerCase(),
+    userId: user.id,
+  });
+  const { mutate: addTodo } = useAddTodo();
 
   useEffect(() => {
     if (todoList && todoList.data) {
@@ -52,12 +56,12 @@ export default function Todo() {
   const addNewTodo = () => {
     if (inputs.title && inputs.start_date) {
       const newTodo = {
+        user_id: user.id,
         category_id: inputs.category_id || 0,
         title: inputs.title,
         start_date: inputs.start_date,
         end_date: inputs.end_date,
         memo: inputs.memo ? inputs.memo.substring(0, 255) : '',
-        user_id: user.id,
       };
       if (token) {
         addTodo(newTodo);

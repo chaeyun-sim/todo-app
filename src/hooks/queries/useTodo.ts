@@ -3,12 +3,18 @@ import axiosInstance from '../../api/instance';
 
 const token = localStorage.getItem('@token');
 
-const useGetTodos = ({ target }: { target: 'yesterday' | 'today' | 'tomorrow' }) => {
+const useGetTodos = ({
+  target,
+  userId,
+}: {
+  target: 'yesterday' | 'today' | 'tomorrow';
+  userId: number;
+}) => {
   return useQuery({
-    queryKey: ['get-todos', target],
+    queryKey: ['get-todos', target, userId],
     queryFn: async () => {
       if (token) {
-        const result = await axiosInstance.get(`/todo?target=${target}`);
+        const result = await axiosInstance.get(`/todo?target=${target}&userId=${userId}`);
         return result.data;
       }
       return [];
@@ -36,12 +42,14 @@ const useAddTodo = () => {
 
   return useMutation({
     mutationFn: async ({
+      user_id,
       category_id,
       title,
       start_date,
       end_date,
       memo,
     }: {
+      user_id: number;
       category_id: number;
       title: string;
       start_date: string;
@@ -49,6 +57,7 @@ const useAddTodo = () => {
       memo: string;
     }) => {
       const result = await axiosInstance.post(`/todo/`, {
+        user_id,
         category_id,
         title,
         start_date,
