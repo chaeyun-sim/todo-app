@@ -3,7 +3,7 @@ import axiosInstance from '../../api/instance';
 
 const token = localStorage.getItem('@token');
 
-const useGetTodos = ({ target }: { target: 'yesterday' | 'today' | 'tomorrow' }) => {
+const useGetTodos = ({ target }: { target: 'yesterday' | 'today' }) => {
   return useQuery({
     queryKey: ['get-todos', target],
     queryFn: async () => {

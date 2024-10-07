@@ -10,12 +10,9 @@ export function getDates() {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
 
   return {
     yesterday: getDateString(yesterday),
     today: getDateString(today),
-    tomorrow: getDateString(tomorrow),
   };
 }

@@ -14,7 +14,7 @@ import DeleteModal from '../../components/common/modal/DeleteModal';
 import { Link } from 'react-router-dom';
 
 export default function Todo() {
-  const [current, setCurrent] = useState(0);
+  const [isToday, setIsToday] = useState(true);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [openModal, setOpenModal] = useState({
@@ -32,7 +32,9 @@ export default function Todo() {
   });
   const [idForDelete, setIdForDelete] = useState(0);
 
-  const { data: todoList, refetch } = useGetTodos({ target: TITLES[current].toLowerCase() });
+  const { data: todoList, refetch } = useGetTodos({
+    target: TITLES[+isToday].toLowerCase(),
+  });
   const { mutate: addTodo } = useAddTodo();
   const token = localStorage.getItem('@token');
   const user = JSON.parse(localStorage.getItem('@user')!);
@@ -44,10 +46,10 @@ export default function Todo() {
   }, [todoList]);
 
   useEffect(() => {
-    if (current === -1) setIsAdding(false);
+    if (isToday) setIsAdding(false);
 
     refetch();
-  }, [current]);
+  }, [isToday]);
 
   const addNewTodo = () => {
     if (inputs.title && inputs.start_date) {
@@ -98,32 +100,32 @@ export default function Todo() {
           <div className={style.title}>
             <button
               className={style.nav_btn}
-              onClick={() => (current === -1 ? null : setCurrent(current - 1))}
-              style={{ cursor: current > -1 ? 'pointer' : 'default' }}
+              onClick={() => setIsToday(false)}
+              style={{ cursor: isToday ? 'pointer' : 'default' }}
             >
               <MdNavigateBefore
                 size={25}
-                color={current === -1 ? '#c1c1c1' : 'black'}
+                color={isToday ? 'black' : '#c1c1c1'}
               />
             </button>
-            {TITLES[current]}
+            {TITLES[+isToday]}
             <button
               className={style.nav_btn}
-              onClick={() => (current === 1 ? null : setCurrent(current + 1))}
-              style={{ cursor: current < 1 ? 'pointer' : 'default' }}
+              onClick={() => setIsToday(true)}
+              style={{ cursor: isToday ? 'default' : 'pointer' }}
             >
               <MdNavigateNext
                 size={25}
-                color={current === 1 ? '#c1c1c1' : 'black'}
+                color={isToday ? '#c1c1c1' : 'black'}
               />
             </button>
           </div>
         </div>
       </div>
-      {(token || (!token && current === 0)) && (
+      {(token || (!token && isToday)) && (
         <div
           className={style.todo_card_wrp}
-          style={{ marginBottom: !token && current === 0 ? '0' : '16px' }}
+          style={{ marginBottom: !token && isToday ? '0' : '16px' }}
         >
           {todos.map(todo => (
             <TodoCard
@@ -136,7 +138,7 @@ export default function Todo() {
           ))}
         </div>
       )}
-      {!token && todos.length === 3 && current === 0 && (
+      {!token && todos.length === 3 && isToday && (
         <p className={style.more_adding_guide}>
           더 많은 투두를 추가하려면 ,<br />
           <Link
@@ -148,7 +150,7 @@ export default function Todo() {
           을 해보세요!
         </p>
       )}
-      {current > -1 && isAdding && (
+      {isToday && isAdding && (
         <AddTodoCard
           inputs={inputs}
           onSetInputs={setInputs}
@@ -162,7 +164,7 @@ export default function Todo() {
           <p className={style.no_todos_text}>No Todos</p>
         </div>
       )}
-      {current > -1 && isAdding && (
+      {isToday && isAdding && (
         <div className={style.button_grp}>
           <button
             className={style.cancel_btn}
@@ -178,7 +180,7 @@ export default function Todo() {
           </button>
         </div>
       )}
-      {current > -1 && !isAdding && (token || (current !== 1 && todos.length < 3)) && (
+      {isToday && !isAdding && (token || (!isToday && todos.length < 3)) && (
         <div
           className={style.add_todo_float}
           onClick={() => setIsAdding(true)}
@@ -207,7 +209,7 @@ export default function Todo() {
             startTime: inputs.start_date,
             endTime: inputs.end_date,
           }}
-          current={current}
+          current={+isToday}
         />
       )}
       {openModal.isMemoModalOpen && (
