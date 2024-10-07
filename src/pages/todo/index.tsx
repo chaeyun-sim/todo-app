@@ -17,6 +17,7 @@ export default function Todo() {
   const [isToday, setIsToday] = useState(true);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [idForDelete, setIdForDelete] = useState(0);
   const [openModal, setOpenModal] = useState({
     isCategoryModalOpen: false,
     isTimeModalOpen: false,
@@ -30,14 +31,15 @@ export default function Todo() {
     start_date: '',
     end_date: '',
   });
-  const [idForDelete, setIdForDelete] = useState(0);
+
+  const token = localStorage.getItem('@token');
+  const user = JSON.parse(localStorage.getItem('@user')!);
 
   const { data: todoList, refetch } = useGetTodos({
     target: TITLES[+isToday].toLowerCase(),
+    userId: user?.id,
   });
   const { mutate: addTodo } = useAddTodo();
-  const token = localStorage.getItem('@token');
-  const user = JSON.parse(localStorage.getItem('@user')!);
 
   useEffect(() => {
     if (todoList && todoList.data) {
