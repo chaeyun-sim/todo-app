@@ -82,12 +82,11 @@ export default function My() {
       </div>
       {user?.id && (
         <>
-          {todoCount?.length && todos?.data?.length && <Chart />}
-          {todoCount?.length === 0 && todos?.data?.length > 0 && (
+          {todoCount?.length && todos?.data?.length ? (
+            <Chart />
+          ) : todos?.data?.length > 0 ? (
             <span style={{ fontSize: '13px' }}>카테고리를 등록해주세요 :)</span>
-          )}
-
-          {!todoCount?.length && !todos?.data?.length && (
+          ) : (
             <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
           )}
         </>

@@ -36,9 +36,10 @@ export default function Todo() {
   const user = JSON.parse(localStorage.getItem('@user')!);
 
   const { data: todoList, refetch } = useGetTodos({
-    target: TITLES[+isToday].toLowerCase(),
+    target: isToday ? 'today' : 'yesterday',
     userId: user?.id,
   });
+
   const { mutate: addTodo } = useAddTodo();
 
   useEffect(() => {
@@ -46,8 +47,6 @@ export default function Todo() {
       setTodos(todoList.data);
     }
   }, [todoList]);
-
-  console.log(isToday);
 
   useEffect(() => {
     if (isToday) setIsAdding(false);
@@ -58,7 +57,7 @@ export default function Todo() {
   const addNewTodo = () => {
     if (inputs.title && inputs.start_date) {
       const newTodo = {
-        category_id: inputs.category_id || 0,
+        category_id: inputs.category_id || null,
         title: inputs.title,
         start_date: inputs.start_date,
         end_date: inputs.end_date,
@@ -75,6 +74,7 @@ export default function Todo() {
               ...newTodo,
               id: todos.length + 1,
               is_completed: false,
+              category_id: inputs.category_id || undefined,
             },
           ]);
         } else {

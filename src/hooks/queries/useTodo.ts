@@ -35,29 +35,16 @@ const useAddTodo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      user_id,
-      category_id,
-      title,
-      start_date,
-      end_date,
-      memo,
-    }: {
+    mutationFn: async (props: {
       user_id: number;
-      category_id: number;
+      category_id: number | null;
       title: string;
       start_date: string;
       end_date: string;
       memo: string;
     }) => {
-      const result = await axiosInstance.post(`/todo/`, {
-        user_id,
-        category_id,
-        title,
-        start_date,
-        end_date,
-        memo,
-      });
+      console.log(props);
+      const result = await axiosInstance.post(`/todo/`, props);
       return result.data;
     },
     onSuccess: () => {
