@@ -1,0 +1,42 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.input {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.submit_box {
+  margin-top: 30px;
+}
+
+.submit_btn {
+  height: 46px;
+  background-color: #ff8787;
+  border-radius: 12px;
+  border: 0;
+  outline: 0;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 36px;
+  width: 328px;
+}
+
+.more_text {
+  font-size: 13px;
+  color: #222;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.do_else {
+  color: #ff8787;
+  cursor: pointer;
+  text-decoration: none;
+}

@@ -61,7 +61,7 @@ export default function Todo() {
         start_date: inputs.start_date,
         end_date: inputs.end_date,
         memo: inputs.memo ? inputs.memo.substring(0, 255) : '',
-        user_id: user.id,
+        user_id: user?.id,
       };
       if (token) {
         addTodo(newTodo);

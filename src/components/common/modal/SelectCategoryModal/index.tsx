@@ -55,7 +55,7 @@ export default function SelectCategoryModal({
 
   useEffect(() => {
     if (data && data.success) {
-      setCategories(data.data);
+      setCategories(data?.data);
     }
   }, [data]);
 

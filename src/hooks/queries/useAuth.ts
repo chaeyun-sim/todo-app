@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,8 +15,7 @@ const useJoin = () => {
       email: string;
       password: string;
     }) => {
-      console.log(`go : `, name, email, password);
-      const result = await axios.post('/api/auth/join', {
+      const result = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/api/auth/join`, {
         name,
         email,
         password,
@@ -31,10 +30,11 @@ const useJoin = () => {
 
 const useLogin = () => {
   const navigate = useNavigate();
+  const queryClient = new QueryClient();
 
   return useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const result = await axios.post('/api/auth/login', {
+      const result = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/api/auth/login`, {
         email,
         password,
       });
@@ -43,6 +43,7 @@ const useLogin = () => {
     onSuccess: data => {
       localStorage.setItem('@token', data.token);
       localStorage.setItem('@user', JSON.stringify(data.user));
+      queryClient.invalidateQueries({ queryKey: ['get-todos'] });
       navigate('/');
     },
     onError: (error: Error) => {

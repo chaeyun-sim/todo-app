@@ -6,37 +6,35 @@ import { useState } from 'react';
 import Chart from '../../components/Chart';
 import { LuLogIn } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
-import { useCountTodos } from '../../hooks/queries/useTodo';
+import { useGetTodos } from '../../hooks/queries/useTodo';
 import { useLogout, useWithdrawal } from '../../hooks/queries/useUser';
 import ChangePasswordModal from '../../components/common/modal/ChangePasswordModal';
+import { TodoItem } from '../../types/types';
 
 export default function My() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('@user')!);
 
-  const { data: todos } = useCountTodos();
+  const { data: todos } = useGetTodos({ target: 'today', userId: user?.id });
   const { mutate: logout } = useLogout();
   const { mutate: withdrawal } = useWithdrawal();
 
   const token = localStorage.getItem('@token');
+  const todoCount = todos?.data?.filter((el: TodoItem) => el.category_id);
 
   const logoutHandler = () => {
     if (token) {
       logout({ id: user?.id });
     } else {
-      localStorage.removeItem('@token');
-      localStorage.removeItem('@user');
-      navigate('/');
+      alert('로그아웃 실패');
     }
   };
   const withdrawalHandler = () => {
-    if (token) {
+    if (token && user?.id) {
       withdrawal({ id: user?.id });
     } else {
-      localStorage.removeItem('@token');
-      localStorage.removeItem('@user');
-      navigate('/');
+      alert('탈퇴 실패');
     }
   };
 
@@ -50,7 +48,7 @@ export default function My() {
           marginBottom: '30px',
         }}
       >
-        {user ? (
+        {user?.id ? (
           <div aria-label='환영 메세지'>
             <strong style={{ fontSize: '24px', fontFamily: 'Agbalumo' }}>{user?.name}</strong>
             <span style={{ fontSize: '16px', marginTop: '8px', marginLeft: '8px' }}>
@@ -72,20 +70,29 @@ export default function My() {
           </button>
         )}
       </div>
-      {user && (
+      {user?.id && (
         <div>
-          <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
+          <div className={style.float_box}>
+            지금까지 {todos?.data?.length}개의 투두를 완료했어요!
+          </div>
         </div>
       )}
       <div style={{ marginTop: '40px' }}>
         <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
       </div>
-      {user &&
-        (todos?.count > 0 ? (
-          <Chart />
-        ) : (
-          <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
-        ))}
+      {user?.id && (
+        <>
+          {todoCount?.length && todos?.data?.length && <Chart />}
+          {todoCount?.length === 0 && todos?.data?.length > 0 && (
+            <span style={{ fontSize: '13px' }}>카테고리를 등록해주세요 :)</span>
+          )}
+
+          {!todoCount?.length && !todos?.data?.length && (
+            <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
+          )}
+        </>
+      )}
+
       {!user && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
@@ -101,7 +108,7 @@ export default function My() {
         <strong style={{ fontSize: '18px', fontWeight: '500' }}>알림 설정</strong>
         <Toggle disabled={!user} />
       </div>
-      {!user && (
+      {!user?.id && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}
 
