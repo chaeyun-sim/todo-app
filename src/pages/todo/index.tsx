@@ -14,9 +14,10 @@ import DeleteModal from '../../components/common/modal/DeleteModal';
 import { Link } from 'react-router-dom';
 
 export default function Todo() {
-  const [current, setCurrent] = useState(0);
+  const [isToday, setIsToday] = useState(true);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [idForDelete, setIdForDelete] = useState(0);
   const [openModal, setOpenModal] = useState({
     isCategoryModalOpen: false,
     isTimeModalOpen: false,
@@ -30,38 +31,39 @@ export default function Todo() {
     start_date: '',
     end_date: '',
   });
-  const [idForDelete, setIdForDelete] = useState(0);
 
   const token = localStorage.getItem('@token');
   const user = JSON.parse(localStorage.getItem('@user')!);
 
   const { data: todoList, refetch } = useGetTodos({
-    target: TITLES[current].toLowerCase(),
+    target: TITLES[+isToday].toLowerCase(),
     userId: user?.id,
   });
   const { mutate: addTodo } = useAddTodo();
 
   useEffect(() => {
-    if (todoList && todoList?.data) {
-      setTodos(todoList?.data);
+    if (todoList && todoList.data) {
+      setTodos(todoList.data);
     }
   }, [todoList]);
 
+  console.log(isToday);
+
   useEffect(() => {
-    if (current === -1) setIsAdding(false);
+    if (isToday) setIsAdding(false);
 
     refetch();
-  }, [current]);
+  }, [isToday]);
 
   const addNewTodo = () => {
     if (inputs.title && inputs.start_date) {
       const newTodo = {
-        user_id: user?.id,
         category_id: inputs.category_id || 0,
         title: inputs.title,
         start_date: inputs.start_date,
         end_date: inputs.end_date,
         memo: inputs.memo ? inputs.memo.substring(0, 255) : '',
+        user_id: user?.id,
       };
       if (token) {
         addTodo(newTodo);
@@ -99,35 +101,41 @@ export default function Todo() {
     <div className={style.container}>
       <div className={style.header}>
         <div className={style.title_box}>
-          <div className={style.title}>
+          <div
+            className={style.title}
+            role='navigation'
+            aria-label='네비게이션 바'
+          >
             <button
               className={style.nav_btn}
-              onClick={() => (current === -1 ? null : setCurrent(current - 1))}
-              style={{ cursor: current > -1 ? 'pointer' : 'default' }}
+              onClick={() => setIsToday(false)}
+              style={{ cursor: isToday ? 'pointer' : 'default' }}
+              aria-label='어제의 투두 보기'
             >
               <MdNavigateBefore
                 size={25}
-                color={current === -1 ? '#c1c1c1' : 'black'}
+                color={isToday ? 'black' : '#c1c1c1'}
               />
             </button>
-            {TITLES[current]}
+            {TITLES[+isToday]}
             <button
               className={style.nav_btn}
-              onClick={() => (current === 1 ? null : setCurrent(current + 1))}
-              style={{ cursor: current < 1 ? 'pointer' : 'default' }}
+              onClick={() => setIsToday(true)}
+              style={{ cursor: isToday ? 'default' : 'pointer' }}
+              aria-label='오늘의 투두 보기'
             >
               <MdNavigateNext
                 size={25}
-                color={current === 1 ? '#c1c1c1' : 'black'}
+                color={isToday ? '#c1c1c1' : 'black'}
               />
             </button>
           </div>
         </div>
       </div>
-      {(token || (!token && current === 0)) && (
+      {(token || (!token && isToday)) && (
         <div
           className={style.todo_card_wrp}
-          style={{ marginBottom: !token && current === 0 ? '0' : '16px' }}
+          style={{ marginBottom: !token && isToday ? '0' : '16px' }}
         >
           {todos.map(todo => (
             <TodoCard
@@ -140,7 +148,7 @@ export default function Todo() {
           ))}
         </div>
       )}
-      {!token && todos.length === 3 && current === 0 && (
+      {!token && todos.length === 3 && isToday && (
         <p className={style.more_adding_guide}>
           더 많은 투두를 추가하려면 ,<br />
           <Link
@@ -152,7 +160,7 @@ export default function Todo() {
           을 해보세요!
         </p>
       )}
-      {current > -1 && isAdding && (
+      {isToday && isAdding && (
         <AddTodoCard
           inputs={inputs}
           onSetInputs={setInputs}
@@ -163,10 +171,10 @@ export default function Todo() {
       )}
       {!todos.length && !isAdding && (
         <div className={style.no_data}>
-          <h1>No Todos</h1>
+          <p className={style.no_todos_text}>추가된 투두가 없습니다.</p>
         </div>
       )}
-      {current > -1 && isAdding && (
+      {isToday && isAdding && (
         <div className={style.button_grp}>
           <button
             className={style.cancel_btn}
@@ -182,16 +190,17 @@ export default function Todo() {
           </button>
         </div>
       )}
-      {current > -1 && !isAdding && (token || (current !== 1 && todos.length < 3)) && (
-        <div
+      {isToday && !isAdding && (token || (isToday && todos.length < 3)) && (
+        <button
           className={style.add_todo_float}
           onClick={() => setIsAdding(true)}
+          aria-label='투두 추가하기'
         >
           <FaPlus
             color='#FAFAFA'
             size={22}
           />
-        </div>
+        </button>
       )}
       {openModal.isCategoryModalOpen && (
         <SelectCategoryModal
@@ -211,7 +220,7 @@ export default function Todo() {
             startTime: inputs.start_date,
             endTime: inputs.end_date,
           }}
-          current={current}
+          current={+isToday}
         />
       )}
       {openModal.isMemoModalOpen && (

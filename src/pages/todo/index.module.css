@@ -136,3 +136,9 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.no_todos_text {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+}

@@ -21,7 +21,6 @@ export default function My() {
   const { mutate: withdrawal } = useWithdrawal();
 
   const token = localStorage.getItem('@token');
-
   const todoCount = todos?.data?.filter((el: TodoItem) => el.category_id);
 
   const logoutHandler = () => {
@@ -50,15 +49,19 @@ export default function My() {
         }}
       >
         {user?.id ? (
-          <>
+          <div aria-label='환영 메세지'>
             <strong style={{ fontSize: '24px', fontFamily: 'Agbalumo' }}>{user?.name}</strong>
             <span style={{ fontSize: '16px', marginTop: '8px', marginLeft: '8px' }}>
               {' '}
               님, 반갑습니다!
             </span>
-          </>
+          </div>
         ) : (
-          <button onClick={() => navigate('/login')}>
+          <button
+            onClick={() => navigate('/login')}
+            role='navigation'
+            aria-label='로그인하러가기'
+          >
             <span style={{ fontSize: '22px', marginRight: '8px' }}>로그인</span>
             <LuLogIn
               size={20}
@@ -74,11 +77,11 @@ export default function My() {
           </div>
         </div>
       )}
+      <div style={{ marginTop: '40px' }}>
+        <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
+      </div>
       {user?.id && (
         <>
-          <div style={{ marginTop: '40px' }}>
-            <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
-          </div>
           {todoCount?.length && todos?.data?.length && <Chart />}
           {todoCount?.length === 0 && todos?.data?.length > 0 && (
             <span style={{ fontSize: '13px' }}>카테고리를 등록해주세요 :)</span>

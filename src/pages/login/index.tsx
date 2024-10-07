@@ -1,23 +1,38 @@
-import { useState } from 'react';
-import logo from '../../assets/logo-big.svg';
-import Input from '../../components/common/Input';
-import style from './index.module.css';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useLogin } from '../../hooks/queries/useAuth';
+import AuthForm from '../../components/AuthForm';
+import { useAuth } from '../../components/layout/AuthLayout';
+
+interface LoginFormData extends Record<string, string> {
+  email: string;
+  password: string;
+}
 
 export default function Login() {
-  const [inputs, setInputs] = useState<{ [key: string]: string }>({
-    Email: '',
-    Password: '',
+  const [inputs, setInputs] = useState<LoginFormData>({
+    email: '',
+    password: '',
   });
-  const [errorMessage, setErrorMessage] = useState<{ [key: string]: string }>({
+  const [errorMessage, setErrorMessage] = useState<LoginFormData>({
     email: '',
     password: '',
   });
 
   const { mutate, error } = useLogin();
+  const { setSubmitHandler } = useAuth();
 
-  const changeHandler = (field: string, value: string) => {
+  useEffect(() => {
+    setSubmitHandler(() => {
+      if (!inputs.email || !inputs.password) return;
+
+      mutate({
+        email: inputs.email,
+        password: inputs.password,
+      });
+    });
+  }, [inputs, mutate, setSubmitHandler]);
+
+  const changeHandler = (field: keyof LoginFormData, value: string) => {
     let isValid = true;
     let errorMsg = '';
 
@@ -32,68 +47,18 @@ export default function Login() {
     setErrorMessage({ ...errorMessage, [field]: errorMsg });
   };
 
-  const submitHandler = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (inputs.email && inputs.password) {
-      mutate({
-        email: inputs.email,
-        password: inputs.password,
-      });
-    }
-  };
-
   return (
-    <div className={style.container}>
-      <img
-        src={logo}
-        alt='로고'
+    <>
+      <AuthForm<LoginFormData>
+        inputs={inputs}
+        errorMessage={errorMessage}
+        validFunc={changeHandler}
       />
-      <form onSubmit={submitHandler}>
-        <div style={{ marginTop: '60px' }}>
-          {['Email', 'Password'].map(item => (
-            <div key={item}>
-              <Input
-                type={item.toLowerCase()}
-                value={inputs[item.toLowerCase()]}
-                placeholder={item}
-                onSetValue={value => changeHandler(item.toLowerCase(), value)}
-                required
-              />
-              <p
-                style={{
-                  margin: '5px 0 25px',
-                  fontSize: '13px',
-                  color: errorMessage[item.toLowerCase()] ? 'crimson' : '',
-                }}
-              >
-                {errorMessage[item.toLowerCase()]}
-              </p>
-            </div>
-          ))}
-        </div>
-        {error && (
-          <p style={{ color: 'crimson', marginBottom: '10px' }}>
-            {'로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.'}
-          </p>
-        )}
-        <div className={style.submit_box}>
-          <button
-            type='submit'
-            className={style.submit_btn}
-          >
-            로그인
-          </button>
-          <p className={style.more_text}>
-            또는{' '}
-            <Link
-              className={style.do_else}
-              to={'/join'}
-            >
-              회원가입하기
-            </Link>
-          </p>
-        </div>
-      </form>
-    </div>
+      {error && (
+        <p style={{ color: 'crimson', marginBottom: '10px' }}>
+          {error instanceof Error ? error.message : '로그인에 실패했습니다.'}
+        </p>
+      )}
+    </>
   );
 }
