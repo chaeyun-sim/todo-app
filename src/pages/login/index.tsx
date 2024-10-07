@@ -22,8 +22,7 @@ export default function Login() {
   const { setSubmitHandler } = useAuth();
 
   useEffect(() => {
-    setSubmitHandler((e: React.FormEvent) => {
-      e.preventDefault();
+    setSubmitHandler(() => {
       if (!inputs.email || !inputs.password) return;
 
       mutate({

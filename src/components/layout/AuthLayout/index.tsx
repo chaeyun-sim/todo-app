@@ -12,13 +12,12 @@ export function useAuth() {
 }
 
 export default function AuthLayout() {
+  const [isLogin, setIsLogin] = useState(location.pathname === '/login');
   const [submitHandler, setSubmitHandler] = useState<(e: React.FormEvent) => void>(
     () => (e: React.FormEvent) => {
       e.preventDefault();
     }
   );
-
-  const isLogin = window.location.pathname === '/login';
 
   return (
     <div className={style.container}>
@@ -40,6 +39,7 @@ export default function AuthLayout() {
             <Link
               className={style.do_else}
               to={isLogin ? '/join' : '/login'}
+              onClick={() => setIsLogin(!isLogin)}
             >
               {isLogin ? '회원가입하기' : '로그인하기'}
             </Link>

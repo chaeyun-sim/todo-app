@@ -25,8 +25,7 @@ export default function Join() {
   const { setSubmitHandler } = useAuth();
 
   useEffect(() => {
-    setSubmitHandler((e: React.FormEvent) => {
-      e.preventDefault();
+    setSubmitHandler(() => {
       if (!inputs.name || !inputs.email || !inputs.password) return;
 
       mutate({
