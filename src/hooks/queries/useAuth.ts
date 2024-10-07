@@ -1,8 +1,14 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const useJoin = () => {
+const useJoin = ({
+  errorHandler,
+  successHandler,
+}: {
+  errorHandler: (error: AxiosError) => void;
+  successHandler: () => void;
+}) => {
   const navigate = useNavigate();
 
   return useMutation({
@@ -23,12 +29,20 @@ const useJoin = () => {
       return result.data;
     },
     onSuccess: () => {
+      successHandler();
       navigate('/login');
     },
+    onError: errorHandler,
   });
 };
 
-const useLogin = () => {
+const useLogin = ({
+  errorHandler,
+  successHandler,
+}: {
+  errorHandler: (error: AxiosError) => void;
+  successHandler: () => void;
+}) => {
   const navigate = useNavigate();
   const queryClient = new QueryClient();
 
@@ -41,14 +55,13 @@ const useLogin = () => {
       return result.data;
     },
     onSuccess: data => {
+      successHandler();
       localStorage.setItem('@token', data.token);
       localStorage.setItem('@user', JSON.stringify(data.user));
       queryClient.invalidateQueries({ queryKey: ['get-todos'] });
       navigate('/');
     },
-    onError: (error: Error) => {
-      console.error('로그인 에러:', error.message);
-    },
+    onError: errorHandler,
   });
 };
 

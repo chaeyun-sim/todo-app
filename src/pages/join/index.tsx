@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useJoin } from '../../hooks/queries/useAuth';
 import AuthForm from '../../components/AuthForm';
 import { useAuth } from '../../components/layout/AuthLayout';
 
@@ -21,20 +20,14 @@ export default function Join() {
     password: '',
   });
 
-  const { mutate } = useJoin();
-  const { setSubmitHandler } = useAuth();
-
+  const { submitFunc } = useAuth();
   useEffect(() => {
-    setSubmitHandler(() => {
-      if (!inputs.name || !inputs.email || !inputs.password) return;
-
-      mutate({
-        name: inputs.name,
-        email: inputs.email,
-        password: inputs.password,
-      });
+    submitFunc({
+      name: inputs.name,
+      email: inputs.email,
+      password: inputs.password,
     });
-  }, [inputs, mutate, setSubmitHandler]);
+  }, [inputs, submitFunc]);
 
   const changeHandler = (field: keyof JoinFormData, value: string) => {
     let isValid = true;

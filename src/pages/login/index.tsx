@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useLogin } from '../../hooks/queries/useAuth';
 import AuthForm from '../../components/AuthForm';
 import { useAuth } from '../../components/layout/AuthLayout';
 
@@ -18,19 +17,13 @@ export default function Login() {
     password: '',
   });
 
-  const { mutate, error } = useLogin();
-  const { setSubmitHandler } = useAuth();
-
+  const { submitFunc } = useAuth();
   useEffect(() => {
-    setSubmitHandler(() => {
-      if (!inputs.email || !inputs.password) return;
-
-      mutate({
-        email: inputs.email,
-        password: inputs.password,
-      });
+    submitFunc({
+      email: inputs.email,
+      password: inputs.password,
     });
-  }, [inputs, mutate, setSubmitHandler]);
+  }, [inputs, submitFunc]);
 
   const changeHandler = (field: keyof LoginFormData, value: string) => {
     let isValid = true;
@@ -48,17 +41,10 @@ export default function Login() {
   };
 
   return (
-    <>
-      <AuthForm<LoginFormData>
-        inputs={inputs}
-        errorMessage={errorMessage}
-        validFunc={changeHandler}
-      />
-      {error && (
-        <p style={{ color: 'crimson', marginBottom: '10px' }}>
-          {error instanceof Error ? error.message : '로그인에 실패했습니다.'}
-        </p>
-      )}
-    </>
+    <AuthForm<LoginFormData>
+      inputs={inputs}
+      errorMessage={errorMessage}
+      validFunc={changeHandler}
+    />
   );
 }
