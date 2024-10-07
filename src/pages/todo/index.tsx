@@ -159,7 +159,7 @@ export default function Todo() {
       )}
       {!todos.length && !isAdding && (
         <div className={style.no_data}>
-          <h1>No Todos</h1>
+          <p className={style.no_todos_text}>No Todos</p>
         </div>
       )}
       {current > -1 && isAdding && (

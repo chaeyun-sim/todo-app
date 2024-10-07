@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { KeyboardEventHandler, useEffect, useState } from 'react';
 import Modal, { ModalProps } from '../index';
 import Input from '../../Input';
