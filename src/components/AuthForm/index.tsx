@@ -16,7 +16,10 @@ export default function AuthForm<T extends Record<string, string>>({
   };
 
   return (
-    <div style={{ marginTop: '60px' }}>
+    <div
+      style={{ marginTop: '60px' }}
+      aria-label='입력 양식'
+    >
       {(Object.keys(inputs) as Array<keyof T>).map(item => {
         const placeholder = item.toString()[0].toUpperCase() + item.toString().slice(1);
         return (
@@ -27,6 +30,7 @@ export default function AuthForm<T extends Record<string, string>>({
               placeholder={placeholder}
               onSetValue={value => changeHandler(item, value)}
               required
+              aria-label={`${String(item)} 입력`}
             />
             <p
               style={{

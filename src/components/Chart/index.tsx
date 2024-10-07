@@ -64,40 +64,42 @@ const Chart = () => {
   }, [todoCount]);
 
   return (
-    <ResponsiveContainer
-      width={330}
-      height={170}
-      className='text-center'
-      style={{ pointerEvents: 'none' }}
-    >
-      <PieChart>
-        <Legend
-          layout='vertical'
-          verticalAlign='middle'
-          align='left'
-          wrapperStyle={{ paddingRight: '10px' }}
-        />
-        <Pie
-          data={chartData}
-          cx='45%'
-          cy='50%'
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={80}
-          fill='#8884d8'
-          dataKey='value'
-          style={{ outline: 'none' }}
-        >
-          {chartData.map((el, index) => (
-            <Cell
-              key={el.name + el.value}
-              fill={colors[index % colors.length]}
-              style={{ outline: 'none' }}
-            />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
+    <div aria-label='카테고리 별 투두에 대한 차트'>
+      <ResponsiveContainer
+        width={330}
+        height={170}
+        className='text-center'
+        style={{ pointerEvents: 'none' }}
+      >
+        <PieChart>
+          <Legend
+            layout='vertical'
+            verticalAlign='middle'
+            align='left'
+            wrapperStyle={{ paddingRight: '10px' }}
+          />
+          <Pie
+            data={chartData}
+            cx='45%'
+            cy='50%'
+            labelLine={false}
+            label={renderCustomizedLabel}
+            outerRadius={80}
+            fill='#8884d8'
+            dataKey='value'
+            style={{ outline: 'none' }}
+          >
+            {chartData.map((el, index) => (
+              <Cell
+                key={el.name + el.value}
+                fill={colors[index % colors.length]}
+                style={{ outline: 'none' }}
+              />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

@@ -23,12 +23,14 @@ export default function Toggle({ checked = false, disabled = false, onChange }: 
   };
 
   return (
-    <div
+    <button
       className={`${styles.toggleContainer} ${disabled ? styles.disabled : ''}`}
       onClick={toggleHandler}
+      aria-label='설정을 켜고 끄기'
+      aria-disabled={disabled}
     >
       <div className={`${styles.toggleSwitch} ${isOn ? styles.toggleSwitchChecked : ''}`} />
       <div className={`${styles.toggleCircle} ${isOn ? styles.toggleCircleChecked : ''}`} />
-    </div>
+    </button>
   );
 }

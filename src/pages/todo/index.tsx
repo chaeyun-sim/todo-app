@@ -45,6 +45,8 @@ export default function Todo() {
     }
   }, [todoList]);
 
+  console.log(isToday);
+
   useEffect(() => {
     if (isToday) setIsAdding(false);
 
@@ -97,11 +99,16 @@ export default function Todo() {
     <div className={style.container}>
       <div className={style.header}>
         <div className={style.title_box}>
-          <div className={style.title}>
+          <div
+            className={style.title}
+            role='navigation'
+            aria-label='네비게이션 바'
+          >
             <button
               className={style.nav_btn}
               onClick={() => setIsToday(false)}
               style={{ cursor: isToday ? 'pointer' : 'default' }}
+              aria-label='어제의 투두 보기'
             >
               <MdNavigateBefore
                 size={25}
@@ -113,6 +120,7 @@ export default function Todo() {
               className={style.nav_btn}
               onClick={() => setIsToday(true)}
               style={{ cursor: isToday ? 'default' : 'pointer' }}
+              aria-label='오늘의 투두 보기'
             >
               <MdNavigateNext
                 size={25}
@@ -161,7 +169,7 @@ export default function Todo() {
       )}
       {!todos.length && !isAdding && (
         <div className={style.no_data}>
-          <p className={style.no_todos_text}>No Todos</p>
+          <p className={style.no_todos_text}>추가된 투두가 없습니다.</p>
         </div>
       )}
       {isToday && isAdding && (
@@ -180,16 +188,17 @@ export default function Todo() {
           </button>
         </div>
       )}
-      {isToday && !isAdding && (token || (!isToday && todos.length < 3)) && (
-        <div
+      {isToday && !isAdding && (token || (isToday && todos.length < 3)) && (
+        <button
           className={style.add_todo_float}
           onClick={() => setIsAdding(true)}
+          aria-label='투두 추가하기'
         >
           <FaPlus
             color='#FAFAFA'
             size={22}
           />
-        </div>
+        </button>
       )}
       {openModal.isCategoryModalOpen && (
         <SelectCategoryModal

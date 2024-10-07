@@ -51,15 +51,19 @@ export default function My() {
         }}
       >
         {user ? (
-          <>
+          <div aria-label='환영 메세지'>
             <strong style={{ fontSize: '24px', fontFamily: 'Agbalumo' }}>{user?.name}</strong>
             <span style={{ fontSize: '16px', marginTop: '8px', marginLeft: '8px' }}>
               {' '}
               님, 반갑습니다!
             </span>
-          </>
+          </div>
         ) : (
-          <button onClick={() => navigate('/login')}>
+          <button
+            onClick={() => navigate('/login')}
+            role='navigation'
+            aria-label='로그인하러가기'
+          >
             <span style={{ fontSize: '22px', marginRight: '8px' }}>로그인</span>
             <LuLogIn
               size={20}
@@ -73,18 +77,15 @@ export default function My() {
           <div className={style.float_box}>지금까지 {todos?.count}개의 투두를 완료했어요!</div>
         </div>
       )}
-      {user && (
-        <>
-          <div style={{ marginTop: '40px' }}>
-            <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
-          </div>
-          {todos?.count > 0 ? (
-            <Chart />
-          ) : (
-            <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
-          )}
-        </>
-      )}
+      <div style={{ marginTop: '40px' }}>
+        <strong style={{ fontSize: '18px', fontWeight: '500' }}>통계</strong>
+      </div>
+      {user &&
+        (todos?.count > 0 ? (
+          <Chart />
+        ) : (
+          <span style={{ fontSize: '13px' }}>투두를 등록해주세요 :)</span>
+        ))}
       {!user && (
         <span style={{ fontSize: '13px', marginTop: '5px' }}>* 로그인 시 활성화됩니다.</span>
       )}

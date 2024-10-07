@@ -3,13 +3,11 @@ import style from './index.module.css';
 import { FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
 import { MdNavigateBefore } from 'react-icons/md';
-import { PiSunLight, PiMoonLight } from 'react-icons/pi';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import NotificationModal from '../common/modal/NotificationModal';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
-  const [changeToDark, setChangeToDark] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -29,24 +27,13 @@ export default function Layout({ children }: PropsWithChildren) {
                   width: '100%',
                 }}
               >
-                <Link to={'/'}>
+                <Link
+                  to={'/'}
+                  role='button'
+                  aria-label='투두 페이지로 가기'
+                >
                   <MdNavigateBefore size={26} />
                 </Link>
-                {changeToDark ? (
-                  <button onClick={() => setChangeToDark(false)}>
-                    <PiMoonLight
-                      size={20}
-                      style={{ marginBottom: '5px' }}
-                    />
-                  </button>
-                ) : (
-                  <button onClick={() => setChangeToDark(true)}>
-                    <PiSunLight
-                      size={20}
-                      style={{ marginBottom: '5px' }}
-                    />
-                  </button>
-                )}
               </div>
             ) : (
               <div
@@ -57,12 +44,16 @@ export default function Layout({ children }: PropsWithChildren) {
                   width: '100%',
                 }}
               >
-                <button onClick={() => setIsOpen(true)}>
+                <button
+                  onClick={() => setIsOpen(true)}
+                  aria-label='알림 보기'
+                >
                   <IoNotificationsOutline size={24} />
                 </button>
                 <Link
                   to={'/my'}
                   className={style.link}
+                  aria-label='마이페이지로 가기'
                 >
                   <FiMenu size={22} />
                 </Link>

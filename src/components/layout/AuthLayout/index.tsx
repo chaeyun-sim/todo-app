@@ -21,13 +21,22 @@ export default function AuthLayout() {
 
   return (
     <div className={style.container}>
-      <img
-        src={logo}
-        alt='로고'
-      />
-      <form onSubmit={submitHandler}>
+      <div>
+        <img
+          src={logo}
+          alt='투두 앱 로고 이미지'
+          style={{ width: '100%' }}
+        />
+      </div>
+      <form
+        onSubmit={submitHandler}
+        aria-label={isLogin ? '로그인 양식' : '회원가입 양식'}
+      >
         <Outlet context={{ setSubmitHandler }} />
-        <div className={style.submit_box}>
+        <div
+          className={style.submit_box}
+          aria-label='회원가입 또는 로그인 버튼 그룹'
+        >
           <button
             type='submit'
             className={style.submit_btn}
@@ -40,6 +49,7 @@ export default function AuthLayout() {
               className={style.do_else}
               to={isLogin ? '/join' : '/login'}
               onClick={() => setIsLogin(!isLogin)}
+              role='link'
             >
               {isLogin ? '회원가입하기' : '로그인하기'}
             </Link>
