@@ -2,7 +2,6 @@
 import style from './index.module.css';
 import { FaCheck } from 'react-icons/fa6';
 import { TodoItem } from '../../types/types';
-import { FiFileText } from 'react-icons/fi';
 import { useSingleCategory } from '../../hooks/queries/useCategory';
 import { useTodoChecked } from '../../hooks/queries/useTodo';
 import { isYesterday } from 'date-fns';
@@ -119,11 +118,17 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
             ? convertTime(start_date)
             : `${convertTime(start_date)} - ${convertTime(end_date)}`}
         </div>
+        {memo && (
+          <p className={style.todo_memo_preview}>
+            메모: {memo?.split('\n')[0] + (memo?.split('\n').length >= 2 ? '...' : '')}
+          </p>
+        )}
         {!checkCompleted && memo && (
           <div
             className={style.todo_memo}
             style={{
               color: checkCompleted || expired ? '#E8E8E8' : '#404040',
+              marginTop: 0,
             }}
           >
             <pre
@@ -134,7 +139,7 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
                 margin: 0,
               }}
             >
-              {memo}
+              {memo.split('\n').slice(1).join('\n')}
             </pre>
           </div>
         )}
@@ -155,14 +160,6 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
           </div>
         )}
       </div>
-      {memo && (
-        <div
-          className={style.category}
-          style={{ right: '40px' }}
-        >
-          <FiFileText color={checkCompleted || expired ? '#cacaca' : '#505050'} />
-        </div>
-      )}
       {category_id! > 0 && (
         <div
           className={style.category}

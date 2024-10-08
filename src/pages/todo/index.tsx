@@ -18,6 +18,7 @@ export default function Todo() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [idForDelete, setIdForDelete] = useState(0);
+  const [now, setNow] = useState(new Date());
   const [openModal, setOpenModal] = useState({
     isCategoryModalOpen: false,
     isTimeModalOpen: false,
@@ -43,8 +44,8 @@ export default function Todo() {
   const { mutate: addTodo } = useAddTodo();
 
   useEffect(() => {
-    if (todoList && todoList.data) {
-      setTodos(todoList.data);
+    if (todoList) {
+      setTodos(todoList);
     }
   }, [todoList]);
 
@@ -53,6 +54,25 @@ export default function Todo() {
 
     refetch();
   }, [isToday]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  function getDate() {
+    const splited = now.toISOString().split('T');
+    const date = splited[0];
+    const time =
+      splited[1].split(':').slice(0, 2).join(':') + ':' + splited[1].split(':')[2].slice(0, 2);
+
+    return `${date} ${time}`;
+  }
 
   const addNewTodo = () => {
     if (inputs.title && inputs.start_date) {
@@ -130,6 +150,7 @@ export default function Todo() {
               />
             </button>
           </div>
+          <div className={style.now}>{getDate()}</div>
         </div>
       </div>
       {(token || (!token && isToday)) && (
