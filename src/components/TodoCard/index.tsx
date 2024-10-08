@@ -5,12 +5,9 @@ import { useSingleCategory } from '../../hooks/queries/useCategory';
 import { useTodoChecked } from '../../hooks/queries/useTodo';
 import { isYesterday } from 'date-fns';
 import { categoriesWithoutToken } from '../common/modal/SelectCategoryModal';
-import { lazy, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
-const FaCheck = lazy(() => import('react-icons/fa').then(mod => ({ default: mod.FaCheck })));
-const MdOutlineDelete = lazy(() =>
-  import('react-icons/md').then(mod => ({ default: mod.MdOutlineDelete }))
-);
+import { FaCheck, MdOutlineDelete } from '../icons';
 
 interface TodoCardProps {
   data: TodoItem;
@@ -84,11 +81,13 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
           onClick={checkHandler}
           style={{ cursor: expired ? 'default' : 'pointer' }}
         >
-          <FaCheck
-            style={{ marginLeft: '-5.5px', marginTop: '-1px' }}
-            size={12}
-            color={'#cacaca'}
-          />
+          <Suspense fallback={<span>...</span>}>
+            <FaCheck
+              style={{ marginLeft: '-5.5px', marginTop: '-1px' }}
+              size={12}
+              color={'#cacaca'}
+            />
+          </Suspense>
         </button>
       ) : (
         <button
@@ -155,10 +154,12 @@ export default function TodoCard({ data, onRefetch, openDeleteModal, onSetId }: 
                 openDeleteModal();
               }}
             >
-              <MdOutlineDelete
-                size={18}
-                stroke='1'
-              />
+              <Suspense fallback={<span>...</span>}>
+                <MdOutlineDelete
+                  size={18}
+                  stroke='1'
+                />
+              </Suspense>
             </button>
           </div>
         )}

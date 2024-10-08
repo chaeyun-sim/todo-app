@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { KeyboardEventHandler, lazy, useEffect, useState } from 'react';
+import { KeyboardEventHandler, Suspense, useEffect, useState } from 'react';
 import Modal, { ModalProps } from '../index';
 import Input from '../../Input';
 import style from './index.module.css';
@@ -11,11 +11,7 @@ import {
 import { CategoryItem } from '../../../../types/types';
 import { HexColorPicker } from 'react-colorful';
 
-const FaCheck = lazy(() => import('react-icons/fa').then(mod => ({ default: mod.FaCheck })));
-const MdClose = lazy(() => import('react-icons/md').then(mod => ({ default: mod.MdClose })));
-const MdOutlineDelete = lazy(() =>
-  import('react-icons/md').then(mod => ({ default: mod.MdOutlineDelete }))
-);
+import { MdClose, FaCheck, MdOutlineDelete } from '../../../icons';
 
 export const categoriesWithoutToken = [
   {
@@ -126,18 +122,17 @@ export default function SelectCategoryModal({
       height='400px'
     >
       <div>
-        {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '14px', marginTop: '16px' }}>기본 카테고리</span>
-        </div> */}
         <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '14px' }}>새로 추가하기 (최대 6개)</span>
             {isDeleting ? (
               <button onClick={() => setIsDeleting(false)}>
-                <FaCheck
-                  size={17}
-                  color={'#15b72b'}
-                />
+                <Suspense fallback={<span>...</span>}>
+                  <FaCheck
+                    size={17}
+                    color={'#15b72b'}
+                  />
+                </Suspense>
               </button>
             ) : (
               <button
@@ -145,7 +140,9 @@ export default function SelectCategoryModal({
                 onMouseLeave={e => (e.currentTarget.style.color = '#7c7c7c')}
                 onClick={() => setIsDeleting(true)}
               >
-                <MdOutlineDelete size={17} />
+                <Suspense fallback={<span>...</span>}>
+                  <MdOutlineDelete size={17} />
+                </Suspense>
               </button>
             )}
           </div>
@@ -198,7 +195,9 @@ export default function SelectCategoryModal({
                 <span>{category.name}</span>
                 {isDeleting && (
                   <span className={style.delete_text}>
-                    <MdClose />
+                    <Suspense fallback={<span>...</span>}>
+                      <MdClose />
+                    </Suspense>
                   </span>
                 )}
               </button>

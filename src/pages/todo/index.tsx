@@ -1,6 +1,6 @@
 import TodoCard from '../../components/TodoCard';
 import style from './index.module.css';
-import { lazy, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import AddTodoCard from '../../components/AddTodoCard';
 import { TodoItem } from '../../types/types';
 import SelectCategoryModal from '../../components/common/modal/SelectCategoryModal';
@@ -11,13 +11,7 @@ import TITLES from '../../constants/title';
 import DeleteModal from '../../components/common/modal/DeleteModal';
 import { Link } from 'react-router-dom';
 
-const FaPlus = lazy(() => import('react-icons/fa').then(mod => ({ default: mod.FaPlus })));
-const MdNavigateBefore = lazy(() =>
-  import('react-icons/md').then(mod => ({ default: mod.MdNavigateBefore }))
-);
-const MdNavigateNext = lazy(() =>
-  import('react-icons/md').then(mod => ({ default: mod.MdNavigateNext }))
-);
+import { FaPlus, MdNavigateBefore, MdNavigateNext } from '../../components/icons';
 
 export default function Todo() {
   const [isToday, setIsToday] = useState(true);
@@ -138,10 +132,12 @@ export default function Todo() {
               style={{ cursor: isToday ? 'pointer' : 'default' }}
               aria-label='어제의 투두 보기'
             >
-              <MdNavigateBefore
-                size={25}
-                color={isToday ? 'black' : '#c1c1c1'}
-              />
+              <Suspense fallback={<span>...</span>}>
+                <MdNavigateBefore
+                  size={25}
+                  color={isToday ? 'black' : '#c1c1c1'}
+                />
+              </Suspense>
             </button>
             {TITLES[+isToday]}
             <button
@@ -150,10 +146,12 @@ export default function Todo() {
               style={{ cursor: isToday ? 'default' : 'pointer' }}
               aria-label='오늘의 투두 보기'
             >
-              <MdNavigateNext
-                size={25}
-                color={isToday ? '#c1c1c1' : 'black'}
-              />
+              <Suspense fallback={<span>...</span>}>
+                <MdNavigateNext
+                  size={25}
+                  color={isToday ? '#c1c1c1' : 'black'}
+                />
+              </Suspense>
             </button>
           </div>
           <div className={style.now}>{getDate()}</div>
@@ -223,10 +221,12 @@ export default function Todo() {
           onClick={() => setIsAdding(true)}
           aria-label='투두 추가하기'
         >
-          <FaPlus
-            color='#FAFAFA'
-            size={22}
-          />
+          <Suspense fallback={<span>...</span>}>
+            <FaPlus
+              color='#FAFAFA'
+              size={22}
+            />
+          </Suspense>
         </button>
       )}
       {openModal.isCategoryModalOpen && (

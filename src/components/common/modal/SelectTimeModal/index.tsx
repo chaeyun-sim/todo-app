@@ -1,12 +1,10 @@
 import Modal, { ModalProps } from '../index';
 import style from './index.module.css';
-import { lazy, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import TITLES from '../../../../constants/title';
 import { getDates } from '../../../../utils/dateUtils';
 
-const GrPowerReset = lazy(() =>
-  import('react-icons/gr').then(mod => ({ default: mod.GrPowerReset }))
-);
+import { GrPowerReset } from '../../../icons';
 
 interface SelectTimeModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   onSetTime: (times: { start: string; end: string }) => void;
@@ -222,7 +220,9 @@ export default function SelectTimeModal({
             className={style.reset_btn}
             onClick={() => setTimes({ startHour: '', startMinute: '', endHour: '', endMinute: '' })}
           >
-            <GrPowerReset />
+            <Suspense fallback={<span>...</span>}>
+              <GrPowerReset />
+            </Suspense>
             <span style={{ marginTop: '2px' }}>시간 초기화</span>
           </button>
           <button

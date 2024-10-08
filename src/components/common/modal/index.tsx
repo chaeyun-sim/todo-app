@@ -1,7 +1,6 @@
-import { lazy, PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren, Suspense, useEffect } from 'react';
 import style from './index.module.css';
-
-const MdClose = lazy(() => import('react-icons/md').then(mod => ({ default: mod.MdClose })));
+import { MdClose } from '../../icons';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -44,7 +43,9 @@ export default function Modal({
             onClick={onClose}
             className={style.close_btn}
           >
-            <MdClose size={24} />
+            <Suspense fallback={<span>...</span>}>
+              <MdClose size={24} />
+            </Suspense>
           </button>
         </div>
         {children}

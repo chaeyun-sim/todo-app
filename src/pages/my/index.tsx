@@ -1,6 +1,6 @@
 import style from './index.module.css';
 import Toggle from '../../components/common/Toggle';
-import { lazy, useState } from 'react';
+import { Suspense, useState } from 'react';
 import Chart from '../../components/Chart';
 import { useNavigate } from 'react-router-dom';
 import { useGetTodos } from '../../hooks/queries/useTodo';
@@ -8,9 +8,7 @@ import { useLogout, useWithdrawal } from '../../hooks/queries/useUser';
 import ChangePasswordModal from '../../components/common/modal/ChangePasswordModal';
 import { TodoItem } from '../../types/types';
 
-const MdLogout = lazy(() => import('react-icons/md').then(mod => ({ default: mod.MdLogout })));
-const FiDelete = lazy(() => import('react-icons/fi').then(mod => ({ default: mod.FiDelete })));
-const LuLogIn = lazy(() => import('react-icons/lu').then(mod => ({ default: mod.LuLogIn })));
+import { MdLogout, FiDelete, LuLogIn } from '../../components/icons';
 
 export default function My() {
   const navigate = useNavigate();
@@ -64,10 +62,12 @@ export default function My() {
             aria-label='로그인하러가기'
           >
             <span style={{ fontSize: '22px', marginRight: '8px' }}>로그인</span>
-            <LuLogIn
-              size={20}
-              style={{ marginBottom: '-2px' }}
-            />
+            <Suspense fallback={<span>...</span>}>
+              <LuLogIn
+                size={20}
+                style={{ marginBottom: '-2px' }}
+              />
+            </Suspense>
           </button>
         )}
       </div>
@@ -157,13 +157,19 @@ export default function My() {
             className={style.btn}
             onClick={logoutHandler}
           >
-            로그아웃 <MdLogout />
+            로그아웃{' '}
+            <Suspense fallback={<span>...</span>}>
+              <MdLogout />
+            </Suspense>
           </button>
           <button
             className={style.btn}
             onClick={withdrawalHandler}
           >
-            회원탈퇴 <FiDelete />
+            회원탈퇴{' '}
+            <Suspense fallback={<span>...</span>}>
+              <FiDelete />
+            </Suspense>
           </button>
         </div>
       )}

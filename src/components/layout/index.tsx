@@ -1,15 +1,9 @@
-import { lazy, PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, Suspense, useState } from 'react';
 import style from './index.module.css';
 import { Link, useLocation } from 'react-router-dom';
 import NotificationModal from '../common/modal/NotificationModal';
 
-const FiMenu = lazy(() => import('react-icons/fi').then(mod => ({ default: mod.FiMenu })));
-const MdNavigateBefore = lazy(() =>
-  import('react-icons/md').then(mod => ({ default: mod.MdNavigateBefore }))
-);
-const IoNotificationsOutline = lazy(() =>
-  import('react-icons/io5').then(mod => ({ default: mod.IoNotificationsOutline }))
-);
+import { FiMenu, MdNavigateBefore, IoNotificationsOutline } from '../icons';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
@@ -37,7 +31,9 @@ export default function Layout({ children }: PropsWithChildren) {
                   role='button'
                   aria-label='투두 페이지로 가기'
                 >
-                  <MdNavigateBefore size={26} />
+                  <Suspense fallback={<span>...</span>}>
+                    <MdNavigateBefore size={26} />
+                  </Suspense>
                 </Link>
               </div>
             ) : (
@@ -53,14 +49,18 @@ export default function Layout({ children }: PropsWithChildren) {
                   onClick={() => setIsOpen(true)}
                   aria-label='알림 보기'
                 >
-                  <IoNotificationsOutline size={24} />
+                  <Suspense fallback={<span>...</span>}>
+                    <IoNotificationsOutline size={24} />
+                  </Suspense>
                 </button>
                 <Link
                   to={'/my'}
                   className={style.link}
                   aria-label='마이페이지로 가기'
                 >
-                  <FiMenu size={22} />
+                  <Suspense fallback={<span>...</span>}>
+                    <FiMenu size={22} />
+                  </Suspense>
                 </Link>
               </div>
             )}
