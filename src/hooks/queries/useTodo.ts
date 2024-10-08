@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '../../api/instance';
+import { TodoItem } from '../../types/types';
 
 const token = localStorage.getItem('@token');
 
@@ -9,7 +10,12 @@ const useGetTodos = ({ target, userId }: { target: 'yesterday' | 'today'; userId
     queryFn: async () => {
       if (token) {
         const result = await axiosInstance.get(`/todo?target=${target}&userId=${userId}`);
-        return result.data;
+        const adjustedData = result.data.map((todo: TodoItem) => ({
+          ...todo,
+          start_date: new Date(todo.start_date).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+          end_date: new Date(todo.end_date).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        }));
+        return adjustedData;
       }
       return [];
     },
