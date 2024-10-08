@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <link
       rel="icon"
-      href="./src/assets/logo.png"
+      href="src/assets/logo.png"
     />
     <meta
       name="viewport"
@@ -35,20 +35,28 @@
     />
     <meta
       property="og:image"
-      content="./src/assets/logo.png"
+      content="src/assets/logo-big.svg"
     />
 
     <!-- 폰트 -->
+    <!-- Google Fonts 최적화 -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Aboreto&family=Agbalumo&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+
+    <!-- Pretendard 폰트 최적화 (이미 최적화되어 있음) -->
     <link
       rel="preload"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
@@ -56,7 +64,21 @@
       onload="this.onload=null;this.rel='stylesheet'"
     />
 
-    <!-- 타이틀 -->
+    <!-- 폰트 로딩 실패 시 대비책 -->
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Aboreto&family=Agbalumo&display=swap"
+        rel="stylesheet"
+      />
+      <link
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+        rel="stylesheet"
+      />
+      <link
+        rel="stylesheet"
+        href="/path/to/non-critical-styles.css"
+      />
+    </noscript>
     <title>Todo App</title>
   </head>
   <body>
@@ -66,4 +88,9 @@
       src="/src/main.tsx"
     ></script>
   </body>
+  <style>
+    body {
+      font-family: 'Aboreto', 'Agbalumo', sans-serif;
+    }
+  </style>
 </html>
