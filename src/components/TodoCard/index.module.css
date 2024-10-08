@@ -71,7 +71,6 @@
 .todo_time {
   font-size: 10px;
   margin-top: 6px;
-  /* padding-right: 30px; */
 }
 
 .category {
@@ -80,23 +79,6 @@
   border-radius: 8px;
   position: absolute;
   right: 10px;
-}
-
-.blank_input {
-  border: none;
-  outline: none;
-  width: 150px;
-}
-
-.blank_input::placeholder {
-  color: #cacaca;
-}
-
-.blank_btn {
-  border: none;
-  background-color: transparent;
-  color: #cacaca;
-  cursor: pointer;
 }
 
 .todo_memo_preview {
