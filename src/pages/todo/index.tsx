@@ -1,8 +1,6 @@
 import TodoCard from '../../components/TodoCard';
 import style from './index.module.css';
-import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
-import { FaPlus } from 'react-icons/fa6';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import AddTodoCard from '../../components/AddTodoCard';
 import { TodoItem } from '../../types/types';
 import SelectCategoryModal from '../../components/common/modal/SelectCategoryModal';
@@ -12,6 +10,14 @@ import { useAddTodo, useGetTodos } from '../../hooks/queries/useTodo';
 import TITLES from '../../constants/title';
 import DeleteModal from '../../components/common/modal/DeleteModal';
 import { Link } from 'react-router-dom';
+
+const FaPlus = lazy(() => import('react-icons/fa').then(mod => ({ default: mod.FaPlus })));
+const MdNavigateBefore = lazy(() =>
+  import('react-icons/md').then(mod => ({ default: mod.MdNavigateBefore }))
+);
+const MdNavigateNext = lazy(() =>
+  import('react-icons/md').then(mod => ({ default: mod.MdNavigateNext }))
+);
 
 export default function Todo() {
   const [isToday, setIsToday] = useState(true);
@@ -207,7 +213,7 @@ export default function Todo() {
             className={style.add_btn}
             onClick={addNewTodo}
           >
-            투두 추가하기
+            . 투두 추가하기
           </button>
         </div>
       )}

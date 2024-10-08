@@ -1,13 +1,16 @@
 /* eslint-disable prefer-const */
 import style from './index.module.css';
-import { FaCheck } from 'react-icons/fa6';
 import { TodoItem } from '../../types/types';
 import { useSingleCategory } from '../../hooks/queries/useCategory';
 import { useTodoChecked } from '../../hooks/queries/useTodo';
 import { isYesterday } from 'date-fns';
-import { MdOutlineDelete } from 'react-icons/md';
 import { categoriesWithoutToken } from '../common/modal/SelectCategoryModal';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
+
+const FaCheck = lazy(() => import('react-icons/fa').then(mod => ({ default: mod.FaCheck })));
+const MdOutlineDelete = lazy(() =>
+  import('react-icons/md').then(mod => ({ default: mod.MdOutlineDelete }))
+);
 
 interface TodoCardProps {
   data: TodoItem;

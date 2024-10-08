@@ -1,9 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { KeyboardEventHandler, useEffect, useState } from 'react';
+import { KeyboardEventHandler, lazy, useEffect, useState } from 'react';
 import Modal, { ModalProps } from '../index';
 import Input from '../../Input';
-import { MdOutlineDelete, MdClose } from 'react-icons/md';
-import { FaCheck } from 'react-icons/fa6';
 import style from './index.module.css';
 import {
   useAddCategory,
@@ -12,6 +10,12 @@ import {
 } from '../../../../hooks/queries/useCategory';
 import { CategoryItem } from '../../../../types/types';
 import { HexColorPicker } from 'react-colorful';
+
+const FaCheck = lazy(() => import('react-icons/fa').then(mod => ({ default: mod.FaCheck })));
+const MdClose = lazy(() => import('react-icons/md').then(mod => ({ default: mod.MdClose })));
+const MdOutlineDelete = lazy(() =>
+  import('react-icons/md').then(mod => ({ default: mod.MdOutlineDelete }))
+);
 
 export const categoriesWithoutToken = [
   {

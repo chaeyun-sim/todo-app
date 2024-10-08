@@ -1,10 +1,15 @@
-import { PropsWithChildren, useState } from 'react';
+import { lazy, PropsWithChildren, useState } from 'react';
 import style from './index.module.css';
-import { FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
-import { MdNavigateBefore } from 'react-icons/md';
-import { IoNotificationsOutline } from 'react-icons/io5';
 import NotificationModal from '../common/modal/NotificationModal';
+
+const FiMenu = lazy(() => import('react-icons/fi').then(mod => ({ default: mod.FiMenu })));
+const MdNavigateBefore = lazy(() =>
+  import('react-icons/md').then(mod => ({ default: mod.MdNavigateBefore }))
+);
+const IoNotificationsOutline = lazy(() =>
+  import('react-icons/io5').then(mod => ({ default: mod.IoNotificationsOutline }))
+);
 
 export default function Layout({ children }: PropsWithChildren) {
   const { pathname } = useLocation();

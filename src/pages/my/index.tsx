@@ -1,15 +1,16 @@
 import style from './index.module.css';
-import { MdLogout } from 'react-icons/md';
-import { FiDelete } from 'react-icons/fi';
 import Toggle from '../../components/common/Toggle';
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import Chart from '../../components/Chart';
-import { LuLogIn } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useGetTodos } from '../../hooks/queries/useTodo';
 import { useLogout, useWithdrawal } from '../../hooks/queries/useUser';
 import ChangePasswordModal from '../../components/common/modal/ChangePasswordModal';
 import { TodoItem } from '../../types/types';
+
+const MdLogout = lazy(() => import('react-icons/md').then(mod => ({ default: mod.MdLogout })));
+const FiDelete = lazy(() => import('react-icons/fi').then(mod => ({ default: mod.FiDelete })));
+const LuLogIn = lazy(() => import('react-icons/lu').then(mod => ({ default: mod.LuLogIn })));
 
 export default function My() {
   const navigate = useNavigate();

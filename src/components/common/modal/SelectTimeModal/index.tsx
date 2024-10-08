@@ -1,9 +1,13 @@
 import Modal, { ModalProps } from '../index';
 import style from './index.module.css';
-import { GrPowerReset } from 'react-icons/gr';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import TITLES from '../../../../constants/title';
 import { getDates } from '../../../../utils/dateUtils';
+
+const GrPowerReset = lazy(() =>
+  import('react-icons/gr').then(mod => ({ default: mod.GrPowerReset }))
+);
+
 interface SelectTimeModalProps extends Pick<ModalProps, 'isOpen' | 'onClose'> {
   onSetTime: (times: { start: string; end: string }) => void;
   data: { startTime: string; endTime: string };

@@ -1,6 +1,7 @@
-import { PropsWithChildren, useEffect } from 'react';
+import { lazy, PropsWithChildren, useEffect } from 'react';
 import style from './index.module.css';
-import { MdClose } from 'react-icons/md';
+
+const MdClose = lazy(() => import('react-icons/md').then(mod => ({ default: mod.MdClose })));
 
 export interface ModalProps {
   isOpen: boolean;
