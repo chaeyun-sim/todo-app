@@ -15,7 +15,7 @@ https://todo-app-chaeyun.vercel.app/
 https://github.com/chaeyun-sim/todo-app-server
 
 ### 🛠️ 기술 스택
-> 프론트엔드
+> 프론트엔드 개발 환경
 - 언어: `Typescript`
 - 라이브러리: `React`
 - 스타일링: `CSS Modules`
@@ -23,17 +23,8 @@ https://github.com/chaeyun-sim/todo-app-server
 - 서버 상태 관리: `Tanstack React Query`
 - HTTP 클라이언트: `Axios`
 
-> 백엔드
-- 언어: `Typescript`
-- 런타임: `Node.js`
-- 프레임워크: `Express.js`
-- 데이터베이스: `Maria DB`
-- API 문서화: `Swagger`
-
 > 배포
 - 클라이언트: `Vercel`
-- 서버: `CloudType`
-- 데이터베이스: `CloudType`
 
 ### 📂 폴더 구조
 ```
